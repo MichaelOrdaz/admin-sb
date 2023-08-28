@@ -3,6 +3,12 @@ import { RouteRecordRaw } from 'vue-router'
 export const ROUTER_NAMES = {
   LOGIN: 'login',
   HOME: 'home',
+  CLIENTS: 'clientes',
+  TIMES: 'tiempos',
+  PASSWORDS: 'claves',
+  USERS: 'usuarios',
+  SETTINGS: 'configuraciones',
+  PAYMENT_OF_FEES: 'honorarios',
 }
 
 const routes: RouteRecordRaw[] = [
@@ -19,6 +25,26 @@ const routes: RouteRecordRaw[] = [
         path: '',
         name: ROUTER_NAMES.HOME,
         component: () => import('pages/IndexPage.vue'),
+      },
+      {
+        path: 'clientes',
+        name: ROUTER_NAMES.CLIENTS,
+        component: () => import('pages/ClientsPage.vue'),
+      },
+      {
+        path: 'tiempos',
+        name: ROUTER_NAMES.TIMES,
+        component: () => import('pages/TimesPage.vue'),
+      },
+      {
+        path: 'honorarios',
+        name: ROUTER_NAMES.PAYMENT_OF_FEES,
+        component: () => import('pages/FeesPage.vue'),
+      },
+      {
+        path: 'claves',
+        name: ROUTER_NAMES.PASSWORDS,
+        component: () => import('pages/PasswordsPage.vue'),
       },
     ],
   },

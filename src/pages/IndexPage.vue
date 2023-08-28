@@ -13,6 +13,7 @@
 import { Todo, Meta } from 'components/models'
 import ExampleComponent from 'components/ExampleComponent.vue'
 import { ref } from 'vue'
+import { useMeta } from 'quasar'
 
 const todos = ref<Todo[]>([
   {
@@ -38,5 +39,9 @@ const todos = ref<Todo[]>([
 ])
 const meta = ref<Meta>({
   totalCount: 1200,
+})
+
+useMeta({
+  title: 'Inicio::S&B',
 })
 </script>

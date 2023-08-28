@@ -34,6 +34,9 @@
             v-ripple
             v-for="item in mainLinks"
             :key="item.title"
+            :to="item.to"
+            active-class="active-page"
+            exact
           >
             <q-item-section avatar>
               <q-icon :name="item.icon" />
@@ -68,33 +71,35 @@
 </template>
 
 <script setup lang="ts">
+import { ROUTER_NAMES } from 'src/router'
 import { ref } from 'vue'
+import { RouteLocationRaw } from 'vue-router'
 
 const mainLinks = [
   {
     title: 'Inicio',
     icon: 'home',
-    to: '',
+    to: { name: ROUTER_NAMES.HOME } as RouteLocationRaw,
   },
   {
     title: 'Clientes',
     icon: 'business',
-    to: 'Honorarios',
+    to: { name: ROUTER_NAMES.CLIENTS } as RouteLocationRaw,
   },
   {
     title: 'Tiempos',
     icon: 'schedule',
-    to: 'Honorarios',
+    to: { name: ROUTER_NAMES.TIMES } as RouteLocationRaw,
   },
   {
     title: 'Honorarios',
     icon: 'monetization_on',
-    to: 'Honorarios',
+    to: { name: ROUTER_NAMES.PAYMENT_OF_FEES } as RouteLocationRaw,
   },
   {
     title: 'Contraseñas',
     icon: 'lock',
-    to: 'Honorarios',
+    to: { name: ROUTER_NAMES.PASSWORDS } as RouteLocationRaw,
   },
 ]
 
@@ -102,12 +107,12 @@ const sistemLinks = [
   {
     title: 'Usuarios',
     icon: 'people',
-    to: 'Honorarios',
+    to: { name: ROUTER_NAMES.HOME } as RouteLocationRaw,
   },
   {
     title: 'Configuraciones',
     icon: 'settings',
-    to: 'Honorarios',
+    to: { name: ROUTER_NAMES.HOME } as RouteLocationRaw,
   },
 ]
 
@@ -130,4 +135,7 @@ function toggleLeftDrawer() {
     right: 10px
     height: 1px
     background: #000
+.active-page
+  background: white
+  color: #000
 </style>
