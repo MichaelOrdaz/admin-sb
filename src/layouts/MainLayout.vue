@@ -13,7 +13,7 @@
 
         <q-toolbar-title> S&amp;B </q-toolbar-title>
 
-        <div>v{{ $q.version }}</div>
+        <div>{{ authStore?.user?.name }}</div>
       </q-toolbar>
     </q-header>
 
@@ -72,8 +72,11 @@
 
 <script setup lang="ts">
 import { ROUTER_NAMES } from 'src/router'
+import { useAuthStore } from 'src/stores/auth-store'
 import { ref } from 'vue'
 import { RouteLocationRaw } from 'vue-router'
+
+const authStore = useAuthStore()
 
 const mainLinks = [
   {
@@ -84,7 +87,7 @@ const mainLinks = [
   {
     title: 'Clientes',
     icon: 'business',
-    to: { name: ROUTER_NAMES.CLIENTS } as RouteLocationRaw,
+    to: { name: ROUTER_NAMES.CLIENTS_LIST } as RouteLocationRaw,
   },
   {
     title: 'Tiempos',

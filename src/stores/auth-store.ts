@@ -10,6 +10,12 @@ export const useAuthStore = defineStore('auth', {
     user: LocalStorage.getItem(AUTH_USER) as User | null,
     token: LocalStorage.getItem<string>(AUTH_TOKEN) || '',
   }),
+  getters: {
+    fullname: ({ user }) =>
+      user
+        ? `${user.name} ${user?.paternalSurname} ${user?.maternalSurname}`
+        : 'Usuario Invitado',
+  },
   actions: {
     async login(email: string, password: string) {
       try {

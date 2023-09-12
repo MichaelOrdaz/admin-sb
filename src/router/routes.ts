@@ -3,7 +3,8 @@ import { RouteRecordRaw } from 'vue-router'
 export const ROUTER_NAMES = {
   LOGIN: 'login',
   HOME: 'home',
-  CLIENTS: 'clientes',
+  CLIENTS_LIST: 'clientes_listado',
+  CLIENTS_NEW: 'clientes_nuevo',
   TIMES: 'tiempos',
   PASSWORDS: 'claves',
   USERS: 'usuarios',
@@ -28,8 +29,13 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'clientes',
-        name: ROUTER_NAMES.CLIENTS,
-        component: () => import('pages/ClientsPage.vue'),
+        name: ROUTER_NAMES.CLIENTS_LIST,
+        component: () => import('pages/clients/ClientsListPage.vue'),
+      },
+      {
+        path: 'clientes/nuevos',
+        name: ROUTER_NAMES.CLIENTS_NEW,
+        component: () => import('pages/clients/ClientsCreatePage.vue'),
       },
       {
         path: 'tiempos',
