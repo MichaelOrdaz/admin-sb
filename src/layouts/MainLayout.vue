@@ -44,7 +44,7 @@
       <q-scroll-area style="height: calc(100% - 100px)">
         <q-list>
           <q-item
-            v-for="item in mainLinks"
+            v-for="item in mainLinksByRole"
             :key="item.title"
             clickable
             v-ripple
@@ -62,18 +62,19 @@
           <q-separator spaced />
           <q-item-label header>Sistema</q-item-label>
 
-          <q-item
-            clickable
-            v-ripple
-            v-for="item in sistemLinks"
-            :key="item.title"
-          >
-            <q-item-section avatar>
-              <q-icon :name="item.icon" />
-            </q-item-section>
-
-            <q-item-section> {{ item.title }} </q-item-section>
-          </q-item>
+          <template v-if="authStore.user?.role === 'admin'">
+            <q-item
+              clickable
+              v-ripple
+              v-for="item in sistemLinks"
+              :key="item.title"
+            >
+              <q-item-section avatar>
+                <q-icon :name="item.icon" />
+              </q-item-section>
+              <q-item-section> {{ item.title }} </q-item-section>
+            </q-item>
+          </template>
         </q-list>
       </q-scroll-area>
     </q-drawer>
@@ -88,7 +89,7 @@
 import { useQuasar } from 'quasar'
 import { ROUTER_NAMES } from 'src/router'
 import { useAuthStore } from 'src/stores/auth-store'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { RouteLocationRaw, useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
@@ -115,11 +116,13 @@ const mainLinks = [
     title: 'Tiempos',
     icon: 'schedule',
     to: { name: ROUTER_NAMES.TIMES } as RouteLocationRaw,
+    admin: true,
   },
   {
     title: 'Honorarios',
     icon: 'monetization_on',
     to: { name: ROUTER_NAMES.PAYMENT_OF_FEES } as RouteLocationRaw,
+    admin: true,
   },
   {
     title: 'Contraseñas',
@@ -140,6 +143,14 @@ const sistemLinks = [
     to: { name: ROUTER_NAMES.HOME } as RouteLocationRaw,
   },
 ]
+
+const mainLinksByRole = computed(() => {
+  if (authStore.user?.role === 'admin') {
+    return mainLinks
+  } else {
+    return mainLinks.filter((item) => !item.admin)
+  }
+})
 
 const leftDrawerOpen = ref(false)
 
