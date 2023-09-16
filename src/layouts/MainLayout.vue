@@ -13,7 +13,13 @@
 
         <q-toolbar-title> S&amp;B </q-toolbar-title>
 
-        <div>{{ authStore?.user?.name }}</div>
+        <div>
+          {{ authStore?.user?.name }}
+          {{ authStore?.user?.paternalSurname || '' }}
+        </div>
+        <q-avatar color="blue-grey-6" class="q-ml-sm" text-color="white">{{
+          authStore?.user?.name[0]
+        }}</q-avatar>
         <q-btn
           icon="logout"
           size="sm"
