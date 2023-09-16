@@ -38,10 +38,10 @@
       <q-scroll-area style="height: calc(100% - 100px)">
         <q-list>
           <q-item
-            clickable
-            v-ripple
             v-for="item in mainLinks"
             :key="item.title"
+            clickable
+            v-ripple
             :to="item.to"
             active-class="active-page"
             exact

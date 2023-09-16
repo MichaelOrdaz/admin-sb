@@ -19,10 +19,21 @@
                   :columns="columns"
                   :loading="loading"
                   :filter="filter"
+                  :pagination="{
+                    rowsPerPage: 10,
+                  }"
                 >
                   <template v-slot:body-cell-actions="props">
                     <q-td :props="props">
-                      <q-btn flat round icon="zoom_in" />
+                      <q-btn
+                        flat
+                        round
+                        icon="zoom_in"
+                        :to="{
+                          name: ROUTER_NAMES.CLIENTS_DETAILS,
+                          params: { clientId: props.row.id },
+                        }"
+                      />
                       <q-btn flat round icon="edit" />
                       <q-btn flat round icon="delete" />
                     </q-td>

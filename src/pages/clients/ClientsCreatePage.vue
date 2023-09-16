@@ -3,16 +3,17 @@
     <div class="row">
       <div class="col-xs-12">
         <q-card>
-          <q-card-section>
+          <q-card-actions>
             <q-btn
               color="white"
-              :to="{ name: ROUTER_NAMES.CLIENTS_LIST }"
               icon="arrow_back"
               flat
+              rounded
+              @click="$router.back()"
             >
             </q-btn>
-          </q-card-section>
-          <q-card-section style="font-size: 20px; font-weight: bold">
+          </q-card-actions>
+          <q-card-section class="text-weight-bold">
             Nuevo cliente
           </q-card-section>
 
@@ -38,6 +39,7 @@
                     :rules="[
                       (val) => (val && val.length > 0) || 'Campo requerido',
                     ]"
+                    maxlength="120"
                   />
                 </div>
 
@@ -51,6 +53,7 @@
                     :rules="[
                       (val) => (val && val.length > 0) || 'Campo requerido',
                     ]"
+                    maxlength="100"
                   />
                 </div>
 
@@ -60,6 +63,7 @@
                     filled
                     v-model="createClient.maternalSurname"
                     label="Apellido Materno"
+                    maxlength="100"
                   />
                 </div>
 
@@ -113,6 +117,7 @@
                       'email',
                     ]"
                     type="email"
+                    maxlength="100"
                   />
                 </div>
 
@@ -123,6 +128,7 @@
                     v-model="createClient.phone"
                     label="Teléfono"
                     type="tel"
+                    maxlength="14"
                   />
                 </div>
 
@@ -133,6 +139,7 @@
                     v-model="createClient.phone2"
                     label="Teléfono alternativo"
                     type="tel"
+                    maxlength="14"
                   />
                 </div>
               </div>
@@ -202,6 +209,7 @@
                       :rules="[
                         (val) => (val && val.length > 0) || 'Campo requerido',
                       ]"
+                      maxlength="200"
                     />
                   </div>
                   <div class="col-xs-4">
@@ -261,6 +269,7 @@
                     :rules="[
                       (val) => (val && val.length > 0) || 'Campo requerido',
                     ]"
+                    maxlength="200"
                   />
                 </div>
 
@@ -270,6 +279,7 @@
                     filled
                     v-model="createClient.interiorNumber"
                     label="Número interior"
+                    maxlength="8"
                   />
                 </div>
 
@@ -279,6 +289,7 @@
                     filled
                     v-model="createClient.outdoorNumber"
                     label="Número exterior"
+                    maxlength="8"
                   />
                 </div>
 
@@ -288,6 +299,7 @@
                     filled
                     v-model="createClient.cologne"
                     label="Colonia"
+                    maxlength="120"
                   />
                 </div>
 
@@ -340,6 +352,7 @@
                     :rules="[
                       (val) => (val && val.length > 0) || 'Campo requerido',
                     ]"
+                    maxlength="150"
                   />
                 </div>
 
@@ -357,6 +370,7 @@
                       (val) => (val && val.length > 0) || 'Campo requerido',
                       (val) => REGEX.RFC_PATTERN.test(val) || 'RFC mal formado',
                     ]"
+                    maxlength="13"
                   />
                 </div>
 
@@ -376,6 +390,7 @@
                         REGEX.CURP_PATTERN.test(val) ||
                         'CURP mal formado',
                     ]"
+                    maxlength="18"
                   />
                 </div>
               </div>
