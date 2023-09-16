@@ -33,9 +33,25 @@
                           name: ROUTER_NAMES.CLIENTS_DETAILS,
                           params: { clientId: props.row.id },
                         }"
+                        title="detalles de cliente"
                       />
-                      <q-btn flat round icon="edit" />
-                      <q-btn flat round icon="delete" />
+                      <q-btn
+                        flat
+                        round
+                        icon="edit"
+                        :to="{
+                          name: ROUTER_NAMES.CLIENTS_EDIT,
+                          params: { clientId: props.row.id },
+                        }"
+                        title="editar cliente"
+                      />
+                      <q-btn
+                        flat
+                        round
+                        icon="remove_circle"
+                        @click=";(confirm = true), (selected = props.row)"
+                        title="Desactivar cliente"
+                      />
                     </q-td>
                   </template>
                   <template v-slot:loading>
@@ -62,18 +78,46 @@
         </q-card>
       </div>
     </div>
+
+    <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="remove_circle" color="negative" text-color="white" />
+          <span class="q-ml-sm" v-if="selected"
+            >Deseas desactivar al cliente {{ selected.name }}
+            {{ selected?.paternalSurname }} de la lista.</span
+          >
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            label="Desactivar"
+            color="negative"
+            v-close-popup
+            @click="deleteClient"
+          />
+          <q-btn flat label="cancelar" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { QTableProps, useMeta } from 'quasar'
+import { QTableProps, useMeta, useQuasar } from 'quasar'
 import { Client, ClientesApi } from 'src/api-client'
 import { ROUTER_NAMES } from 'src/router'
 import { ref } from 'vue'
 
+const $q = useQuasar()
+
 useMeta({
   title: 'Clientes::S&B',
 })
+
+const confirm = ref(false)
+const selected = ref<Client | null>(null)
 
 const loading = ref(false)
 const filter = ref('')
@@ -128,4 +172,19 @@ const columns: QTableProps['columns'] = [
   { name: 'email', label: 'email', field: 'email', align: 'left' },
   { name: 'actions', label: 'acciones', field: 'acciones' },
 ]
+
+const deleteClient = async () => {
+  if (selected.value) {
+    const response = await new ClientesApi().clientsControllerSoftRemoveClient(
+      selected.value?.id as number
+    )
+
+    getClients()
+
+    $q.notify({
+      color: 'primary',
+      message: 'El cliente fue desactivado',
+    })
+  }
+}
 </script>

@@ -21,9 +21,15 @@
               color="primary"
               icon="edit"
               label="editar"
-              :to="{ name: ROUTER_NAMES.CLIENTS_NEW }"
+              :to="{ name: ROUTER_NAMES.CLIENTS_EDIT }"
             />
-            <q-btn color="red-5" icon="delete" label="eliminar" />
+            <q-btn
+              color="yellow"
+              text-color="black"
+              icon="remove_circle"
+              label="desactivar"
+              @click="confirm = true"
+            />
           </q-card-actions>
 
           <q-card-section v-if="client">
@@ -165,21 +171,48 @@
         </q-card>
       </div>
     </div>
+
+    <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="remove_circle" color="negative" text-color="white" />
+          <span class="q-ml-sm" v-if="client"
+            >Deseas desactivar al cliente {{ client.name }}
+            {{ client?.paternalSurname }}.</span
+          >
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            label="Desactivar"
+            color="negative"
+            v-close-popup
+            @click="deleteClient"
+          />
+          <q-btn flat label="cancelar" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { useMeta } from 'quasar'
+import { useMeta, useQuasar } from 'quasar'
 import { Client, ClientesApi } from 'src/api-client'
 import { ROUTER_NAMES } from 'src/router'
 import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
+const router = useRouter()
+const $q = useQuasar()
 
 useMeta({
   title: 'Clientes::S&B',
 })
+
+const confirm = ref(false)
 
 const loading = ref(false)
 const client = ref<Client | null>(null)
@@ -195,5 +228,33 @@ const getClient = async () => {
 
 getClient()
 
-watch(() => route.params, getClient)
+watch(
+  () => route.params,
+  (to) => {
+    if (to?.clientId) getClient()
+  }
+)
+
+const deleteClient = async () => {
+  if (client.value) {
+    try {
+      const response =
+        await new ClientesApi().clientsControllerSoftRemoveClient(
+          client.value?.id as number
+        )
+
+      router.push({ name: ROUTER_NAMES.CLIENTS_LIST })
+
+      $q.notify({
+        color: 'primary',
+        message: 'El cliente fue desactivado',
+      })
+    } catch (e) {
+      $q.notify({
+        color: 'warning',
+        message: 'Ocurrio un error, reintente',
+      })
+    }
+  }
+}
 </script>

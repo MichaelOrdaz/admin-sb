@@ -6,6 +6,7 @@ export const ROUTER_NAMES = {
   CLIENTS_LIST: 'clientes_listado',
   CLIENTS_NEW: 'clientes_nuevo',
   CLIENTS_DETAILS: 'clientes_detalle',
+  CLIENTS_EDIT: 'clientes_edicion',
   TIMES: 'tiempos',
   PASSWORDS: 'claves',
   USERS: 'usuarios',
@@ -42,6 +43,11 @@ const routes: RouteRecordRaw[] = [
         path: 'clientes/:clientId(\\d+)',
         name: ROUTER_NAMES.CLIENTS_DETAILS,
         component: () => import('pages/clients/ClientsDetailsPage.vue'),
+      },
+      {
+        path: 'clientes/:clientId(\\d+)/edicion',
+        name: ROUTER_NAMES.CLIENTS_EDIT,
+        component: () => import('pages/clients/ClientsEditPage.vue'),
       },
       {
         path: 'tiempos',

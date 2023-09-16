@@ -14,10 +14,10 @@
             </q-btn>
           </q-card-actions>
           <q-card-section class="text-weight-bold">
-            Nuevo cliente
+            Edición de datos del cliente
           </q-card-section>
 
-          <q-card-section>
+          <q-card-section v-if="client">
             <q-form
               @submit="onSubmit"
               greedy
@@ -194,7 +194,6 @@
               <div class="row q-my-md">
                 <div class="col text-weight-bold">Actividades</div>
               </div>
-
               <div class="row q-col-gutter-sm items-stretch">
                 <template
                   v-for="(activityClient, index) in activitiesClient"
@@ -283,6 +282,7 @@
                     maxlength="8"
                   />
                 </div>
+
                 <div class="col-sm-6">
                   <q-input
                     color="white"
@@ -415,6 +415,9 @@
               </div>
             </q-form>
           </q-card-section>
+          <q-inner-loading :showing="loading">
+            <q-spinner-gears size="50px" color="white" />
+          </q-inner-loading>
         </q-card>
       </div>
     </div>
@@ -423,16 +426,25 @@
 
 <script setup lang="ts">
 import { QForm, useMeta, useQuasar } from 'quasar'
-import { ClientesApi, CreateClientDto, RegimenFiscalApi } from 'src/api-client'
+import {
+  Client,
+  ClientesApi,
+  CreateClientDto,
+  RegimenFiscalApi,
+} from 'src/api-client'
 import { ref, watch } from 'vue'
 import { STATES, REGEX } from '../../constants'
 import { AxiosError } from 'axios'
+import { useRoute } from 'vue-router'
 
 const $q = useQuasar()
-
+const route = useRoute()
 useMeta({
   title: 'Clientes::S&B',
 })
+
+const loading = ref(false)
+const client = ref<Client | null>(null)
 
 const clientForm = ref<QForm | null>(null)
 
@@ -457,9 +469,12 @@ const createClient = ref<Partial<CreateClientDto>>({
   legalRepresentativeCURP: '',
 })
 
-const activityItemBase: { activity: null | string; percentage: null | number } =
-  { activity: null, percentage: null }
-const regimesClient = ref<(null | number)[]>([null])
+const activityItemBase: {
+  activity: null | string
+  percentage: null | string
+  id?: number
+} = { activity: null, percentage: null }
+const regimesClient = ref<(string | null)[]>([null])
 const activitiesClient = ref([{ ...activityItemBase }])
 
 const regimesOptionsMapped = ref<
@@ -549,29 +564,34 @@ const onSubmit = async () => {
     activities: activitiesClient.value.map((i) => ({
       name: i.activity!,
       percentage: +i.percentage!,
+      id: i.id,
     })),
   }
 
   try {
     Object.keys(createClientRequest).forEach((prop) => {
       if (createClientRequest[prop as keyof CreateClientDto] === '') {
-        delete createClientRequest[prop as keyof CreateClientDto]
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        createClientRequest[prop as keyof CreateClientDto] = null
       }
     })
 
-    const response = await new ClientesApi().clientsControllerCreateClient({
-      ...createClientRequest,
-    })
+    const response = await new ClientesApi().clientsControllerUpdateClient(
+      client.value?.id as number,
+      {
+        ...createClientRequest,
+      }
+    )
     $q.notify({
       color: 'positive',
-      message: 'Cliente agregado con exito',
+      message: 'El Cliente fue guardado con exito',
     })
 
     resetForm()
     clientForm.value!.reset()
     clientForm.value!.resetValidation()
   } catch (e) {
-    console.log('error', e)
     if (e instanceof AxiosError) {
       $q.notify({
         color: 'negative',
@@ -588,6 +608,52 @@ const onSubmit = async () => {
   }
 }
 
+// recuperar datos del cliente
+const getClient = async () => {
+  loading.value = true
+  const response = await new ClientesApi().clientsControllerFindOneClient(
+    +route.params.clientId
+  )
+  client.value = response.data.data?.client as Client
+  loading.value = false
+
+  createClient.value.name = client.value.name
+  createClient.value.paternalSurname = client.value.paternalSurname
+  createClient.value.maternalSurname = client.value.maternalSurname
+  createClient.value.email = client.value.email
+  createClient.value.phone = client.value.phone
+  createClient.value.phone2 = client.value.phone2
+  createClient.value.rfc = client.value.rfc
+  createClient.value.curp = client.value.curp
+  createClient.value.street = client.value.street
+  createClient.value.outdoorNumber = client.value.outdoorNumber
+  createClient.value.interiorNumber = client.value.interiorNumber
+  createClient.value.cologne = client.value.cologne
+  createClient.value.postalCode = client.value.postalCode
+  createClient.value.province = client.value.province
+  createClient.value.state = client.value.state
+  createClient.value.legalRepresentativeFullname =
+    client.value.legalRepresentativeFullname
+  createClient.value.legalRepresentativeRFC =
+    client.value.legalRepresentativeRFC
+  createClient.value.legalRepresentativeCURP =
+    client.value.legalRepresentativeCURP
+
+  if (client.value.regimes) {
+    regimesClient.value = client.value.regimes?.map((i) => `${i.id}`)
+  }
+
+  if (client.value.activities) {
+    activitiesClient.value = client.value.activities.map((item) => ({
+      activity: item.name,
+      percentage: `${item.percentage}`,
+      id: item.id,
+    }))
+  }
+}
+
+getClient()
+
 watch(
   () => regimesClient.value,
   (to) => {
@@ -597,5 +663,12 @@ watch(
     })
   },
   { deep: true }
+)
+
+watch(
+  () => route.params,
+  (to) => {
+    if (to?.clientId) getClient()
+  }
 )
 </script>
