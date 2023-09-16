@@ -32,14 +32,6 @@ const onSubmit = async () => {
     }
   }
 }
-
-// const perfil = async () => {
-//   const me = await new AuthApi().authControllerGetProfile({
-//     headers: {
-//       Authorization: `Bearer ${authStore.token}`,
-//     },
-//   })
-// }
 </script>
 <template>
   <div class="row justify-center window-height items-center q-pa-sm">
@@ -56,7 +48,10 @@ const onSubmit = async () => {
           v-model="email"
           label="Correo electrónico *"
           lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Campo requerido']"
+          :rules="[
+            (val) => (val && val.length > 0) || 'Campo requerido',
+            'email',
+          ]"
         />
 
         <q-input

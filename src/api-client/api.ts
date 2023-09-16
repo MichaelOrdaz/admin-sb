@@ -44,7 +44,7 @@ export interface Activity {
    * @type {number}
    * @memberof Activity
    */
-  id: number
+  id?: number
   /**
    *
    * @type {string}
@@ -62,7 +62,7 @@ export interface Activity {
    * @type {Client}
    * @memberof Activity
    */
-  client: Client
+  client?: Client
   /**
    *
    * @type {string}
@@ -80,33 +80,7 @@ export interface Activity {
    * @type {string}
    * @memberof Activity
    */
-  deletedAt: string
-}
-/**
- *
- * @export
- * @interface AuthControllerGetProfile200Response
- */
-export interface AuthControllerGetProfile200Response {
-  /**
-   *
-   * @type {AuthControllerGetProfile200ResponseData}
-   * @memberof AuthControllerGetProfile200Response
-   */
-  data?: AuthControllerGetProfile200ResponseData
-}
-/**
- *
- * @export
- * @interface AuthControllerGetProfile200ResponseData
- */
-export interface AuthControllerGetProfile200ResponseData {
-  /**
-   *
-   * @type {User}
-   * @memberof AuthControllerGetProfile200ResponseData
-   */
-  user?: User
+  deletedAt?: string
 }
 /**
  *
@@ -143,31 +117,6 @@ export interface AuthControllerLogin200ResponseData {
 /**
  *
  * @export
- * @interface AuthControllerLogin400Response
- */
-export interface AuthControllerLogin400Response {
-  /**
-   *
-   * @type {number}
-   * @memberof AuthControllerLogin400Response
-   */
-  statusCode?: number
-  /**
-   *
-   * @type {}
-   * @memberof AuthControllerLogin400Response
-   */
-  message?: any
-  /**
-   *
-   * @type {string}
-   * @memberof AuthControllerLogin400Response
-   */
-  error?: string
-}
-/**
- *
- * @export
  * @interface Client
  */
 export interface Client {
@@ -188,13 +137,13 @@ export interface Client {
    * @type {string}
    * @memberof Client
    */
-  paternalSurname: string
+  paternalSurname?: string
   /**
    *
    * @type {string}
    * @memberof Client
    */
-  maternalSurname: string
+  maternalSurname?: string
   /**
    *
    * @type {string}
@@ -206,13 +155,13 @@ export interface Client {
    * @type {string}
    * @memberof Client
    */
-  phone: string
+  phone?: string
   /**
    *
    * @type {string}
    * @memberof Client
    */
-  phone2: string
+  phone2?: string
   /**
    *
    * @type {string}
@@ -224,43 +173,43 @@ export interface Client {
    * @type {string}
    * @memberof Client
    */
-  curp: string
+  curp?: string
   /**
    *
    * @type {string}
    * @memberof Client
    */
-  street: string
+  street?: string
   /**
    *
    * @type {string}
    * @memberof Client
    */
-  outdoorNumber: string
+  outdoorNumber?: string
   /**
    *
    * @type {string}
    * @memberof Client
    */
-  interiorNumber: string
+  interiorNumber?: string
   /**
    *
    * @type {string}
    * @memberof Client
    */
-  cologne: string
+  cologne?: string
   /**
    *
    * @type {string}
    * @memberof Client
    */
-  postalCode: string
+  postalCode?: string
   /**
    *
    * @type {string}
    * @memberof Client
    */
-  province: string
+  province?: string
   /**
    *
    * @type {string}
@@ -269,28 +218,46 @@ export interface Client {
   state: string
   /**
    *
+   * @type {string}
+   * @memberof Client
+   */
+  legalRepresentativeFullname?: string
+  /**
+   *
+   * @type {string}
+   * @memberof Client
+   */
+  legalRepresentativeRFC?: string
+  /**
+   *
+   * @type {string}
+   * @memberof Client
+   */
+  legalRepresentativeCURP?: string
+  /**
+   *
    * @type {Array<Activity>}
    * @memberof Client
    */
-  activities: Array<Activity>
+  activities?: Array<Activity>
   /**
    *
    * @type {Array<Regime>}
    * @memberof Client
    */
-  regimes: Array<Regime>
+  regimes?: Array<Regime>
   /**
    *
    * @type {string}
    * @memberof Client
    */
-  createdAt?: string
+  createdAt: string
   /**
    *
    * @type {string}
    * @memberof Client
    */
-  updatedAt?: string
+  updatedAt: string
   /**
    *
    * @type {string}
@@ -392,7 +359,7 @@ export interface CreateClientDto {
    * @type {string}
    * @memberof CreateClientDto
    */
-  paternalSurname: string
+  paternalSurname?: string
   /**
    *
    * @type {string}
@@ -422,7 +389,7 @@ export interface CreateClientDto {
    * @type {string}
    * @memberof CreateClientDto
    */
-  rfc?: string
+  rfc: string
   /**
    *
    * @type {string}
@@ -470,7 +437,25 @@ export interface CreateClientDto {
    * @type {string}
    * @memberof CreateClientDto
    */
-  state?: string
+  state: string
+  /**
+   *
+   * @type {string}
+   * @memberof CreateClientDto
+   */
+  legalRepresentativeFullname: string
+  /**
+   *
+   * @type {string}
+   * @memberof CreateClientDto
+   */
+  legalRepresentativeRFC: string
+  /**
+   *
+   * @type {string}
+   * @memberof CreateClientDto
+   */
+  legalRepresentativeCURP: string
   /**
    *
    * @type {Array<number>}
@@ -483,6 +468,49 @@ export interface CreateClientDto {
    * @memberof CreateClientDto
    */
   activities: Array<ClientActivitiesDto>
+}
+/**
+ *
+ * @export
+ * @interface CreateUserDto
+ */
+export interface CreateUserDto {
+  /**
+   *
+   * @type {string}
+   * @memberof CreateUserDto
+   */
+  name: string
+  /**
+   *
+   * @type {string}
+   * @memberof CreateUserDto
+   */
+  paternalSurname?: string
+  /**
+   *
+   * @type {string}
+   * @memberof CreateUserDto
+   */
+  maternalSurname?: string
+  /**
+   *
+   * @type {string}
+   * @memberof CreateUserDto
+   */
+  email: string
+  /**
+   *
+   * @type {string}
+   * @memberof CreateUserDto
+   */
+  phone?: string
+  /**
+   *
+   * @type {string}
+   * @memberof CreateUserDto
+   */
+  role: string
 }
 /**
  *
@@ -514,7 +542,7 @@ export interface Regime {
    * @type {number}
    * @memberof Regime
    */
-  id: number
+  id?: number
   /**
    *
    * @type {string}
@@ -526,13 +554,13 @@ export interface Regime {
    * @type {string}
    * @memberof Regime
    */
-  key: string
+  key?: string
   /**
    *
    * @type {Array<Client>}
    * @memberof Regime
    */
-  clients: Array<Client>
+  clients?: Array<Client>
   /**
    *
    * @type {string}
@@ -550,7 +578,7 @@ export interface Regime {
    * @type {string}
    * @memberof Regime
    */
-  deletedAt: string
+  deletedAt?: string
 }
 /**
  *
@@ -615,7 +643,7 @@ export interface User {
    * @type {number}
    * @memberof User
    */
-  id: number
+  id?: number
   /**
    *
    * @type {string}
@@ -633,7 +661,7 @@ export interface User {
    * @type {string}
    * @memberof User
    */
-  maternalSurname: string
+  maternalSurname?: string
   /**
    *
    * @type {string}
@@ -651,7 +679,7 @@ export interface User {
    * @type {string}
    * @memberof User
    */
-  phone: string
+  phone?: string
   /**
    *
    * @type {string}
@@ -663,7 +691,7 @@ export interface User {
    * @type {boolean}
    * @memberof User
    */
-  active: boolean
+  active?: boolean
   /**
    *
    * @type {string}
@@ -682,6 +710,121 @@ export interface User {
    * @memberof User
    */
   deletedAt: string
+}
+/**
+ *
+ * @export
+ * @interface UsersControllerCreateUser201Response
+ */
+export interface UsersControllerCreateUser201Response {
+  /**
+   *
+   * @type {UsersControllerCreateUser201ResponseData}
+   * @memberof UsersControllerCreateUser201Response
+   */
+  data?: UsersControllerCreateUser201ResponseData
+}
+/**
+ *
+ * @export
+ * @interface UsersControllerCreateUser201ResponseData
+ */
+export interface UsersControllerCreateUser201ResponseData {
+  /**
+   *
+   * @type {User}
+   * @memberof UsersControllerCreateUser201ResponseData
+   */
+  user?: User
+  /**
+   *
+   * @type {string}
+   * @memberof UsersControllerCreateUser201ResponseData
+   */
+  password?: string
+}
+/**
+ *
+ * @export
+ * @interface UsersControllerFindAll200Response
+ */
+export interface UsersControllerFindAll200Response {
+  /**
+   *
+   * @type {UsersControllerFindAll200ResponseData}
+   * @memberof UsersControllerFindAll200Response
+   */
+  data?: UsersControllerFindAll200ResponseData
+}
+/**
+ *
+ * @export
+ * @interface UsersControllerFindAll200ResponseData
+ */
+export interface UsersControllerFindAll200ResponseData {
+  /**
+   *
+   * @type {Array<User>}
+   * @memberof UsersControllerFindAll200ResponseData
+   */
+  users?: Array<User>
+}
+/**
+ *
+ * @export
+ * @interface UsersControllerFindAll400Response
+ */
+export interface UsersControllerFindAll400Response {
+  /**
+   *
+   * @type {number}
+   * @memberof UsersControllerFindAll400Response
+   */
+  statusCode?: number
+  /**
+   *
+   * @type {UsersControllerFindAll400ResponseMessage}
+   * @memberof UsersControllerFindAll400Response
+   */
+  message?: UsersControllerFindAll400ResponseMessage
+  /**
+   *
+   * @type {string}
+   * @memberof UsersControllerFindAll400Response
+   */
+  error?: string
+}
+/**
+ *
+ * @export
+ * @interface UsersControllerFindAll400ResponseMessage
+ */
+export interface UsersControllerFindAll400ResponseMessage {}
+/**
+ *
+ * @export
+ * @interface UsersControllerFindOne200Response
+ */
+export interface UsersControllerFindOne200Response {
+  /**
+   *
+   * @type {UsersControllerFindOne200ResponseData}
+   * @memberof UsersControllerFindOne200Response
+   */
+  data?: UsersControllerFindOne200ResponseData
+}
+/**
+ *
+ * @export
+ * @interface UsersControllerFindOne200ResponseData
+ */
+export interface UsersControllerFindOne200ResponseData {
+  /**
+   *
+   * @type {User}
+   * @memberof UsersControllerFindOne200ResponseData
+   */
+  user?: User
 }
 
 /**
@@ -716,6 +859,10 @@ export const AuthApiAxiosParamCreator = function (
       }
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
@@ -755,6 +902,10 @@ export const AuthApiAxiosParamCreator = function (
       }
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
@@ -845,6 +996,10 @@ export const AuthApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
 
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
         baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -883,6 +1038,10 @@ export const AuthApiAxiosParamCreator = function (
       }
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
@@ -940,7 +1099,7 @@ export const AuthApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string
-      ) => AxiosPromise<AuthControllerGetProfile200Response>
+      ) => AxiosPromise<UsersControllerFindOne200Response>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.authControllerGetProfile(options)
@@ -1049,7 +1208,7 @@ export const AuthApiFactory = function (
      */
     authControllerGetProfile(
       options?: any
-    ): AxiosPromise<AuthControllerGetProfile200Response> {
+    ): AxiosPromise<UsersControllerFindOne200Response> {
       return localVarFp
         .authControllerGetProfile(options)
         .then((request) => request(axios, basePath))
@@ -1209,6 +1368,10 @@ export const ClientesApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
 
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
       localVarHeaderParameter['Content-Type'] = 'application/json'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
@@ -1233,10 +1396,12 @@ export const ClientesApiAxiosParamCreator = function (
     /**
      * Obtiene una lista de clientes registrados en el sistema, con informacion basica
      * @summary
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     clientsControllerFindClients: async (
+      inactive?: 0 | 1,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
       const localVarPath = `/clients`
@@ -1254,6 +1419,14 @@ export const ClientesApiAxiosParamCreator = function (
       }
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      if (inactive !== undefined) {
+        localVarQueryParameter['inactive'] = inactive
+      }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
@@ -1301,6 +1474,10 @@ export const ClientesApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
 
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
         baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -1316,18 +1493,126 @@ export const ClientesApiAxiosParamCreator = function (
       }
     },
     /**
-     * Elimina un cliente por id
+     * Elimina un cliente por id por completo de la base de datos
      * @summary
      * @param {number} clientId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    clientsControllerRemove: async (
+    clientsControllerForceRemoveClient: async (
       clientId: number,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'clientId' is not null or undefined
-      assertParamExists('clientsControllerRemove', 'clientId', clientId)
+      assertParamExists(
+        'clientsControllerForceRemoveClient',
+        'clientId',
+        clientId
+      )
+      const localVarPath = `/clients/{clientId}/destroy`.replace(
+        `{${'clientId'}}`,
+        encodeURIComponent(String(clientId))
+      )
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'DELETE',
+        ...baseOptions,
+        ...options,
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     * reestablece un cliente que fue eliminado temporalmente
+     * @summary
+     * @param {number} clientId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    clientsControllerRestoreClient: async (
+      clientId: number,
+      options: AxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'clientId' is not null or undefined
+      assertParamExists('clientsControllerRestoreClient', 'clientId', clientId)
+      const localVarPath = `/clients/{clientId}/restore`.replace(
+        `{${'clientId'}}`,
+        encodeURIComponent(String(clientId))
+      )
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     * Elimina un cliente por id, se conservan sus datos (borrado logico)
+     * @summary
+     * @param {number} clientId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    clientsControllerSoftRemoveClient: async (
+      clientId: number,
+      options: AxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'clientId' is not null or undefined
+      assertParamExists(
+        'clientsControllerSoftRemoveClient',
+        'clientId',
+        clientId
+      )
       const localVarPath = `/clients/{clientId}`.replace(
         `{${'clientId'}}`,
         encodeURIComponent(String(clientId))
@@ -1346,6 +1631,10 @@ export const ClientesApiAxiosParamCreator = function (
       }
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
@@ -1400,6 +1689,10 @@ export const ClientesApiAxiosParamCreator = function (
       }
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       localVarHeaderParameter['Content-Type'] = 'application/json'
 
@@ -1463,10 +1756,12 @@ export const ClientesApiFp = function (configuration?: Configuration) {
     /**
      * Obtiene una lista de clientes registrados en el sistema, con informacion basica
      * @summary
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async clientsControllerFindClients(
+      inactive?: 0 | 1,
       options?: AxiosRequestConfig
     ): Promise<
       (
@@ -1475,7 +1770,10 @@ export const ClientesApiFp = function (configuration?: Configuration) {
       ) => AxiosPromise<ClientsControllerFindClients200Response>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.clientsControllerFindClients(options)
+        await localVarAxiosParamCreator.clientsControllerFindClients(
+          inactive,
+          options
+        )
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -1512,13 +1810,13 @@ export const ClientesApiFp = function (configuration?: Configuration) {
       )
     },
     /**
-     * Elimina un cliente por id
+     * Elimina un cliente por id por completo de la base de datos
      * @summary
      * @param {number} clientId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async clientsControllerRemove(
+    async clientsControllerForceRemoveClient(
       clientId: number,
       options?: AxiosRequestConfig
     ): Promise<
@@ -1528,7 +1826,63 @@ export const ClientesApiFp = function (configuration?: Configuration) {
       ) => AxiosPromise<ClientsControllerCreateClient201Response>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.clientsControllerRemove(
+        await localVarAxiosParamCreator.clientsControllerForceRemoveClient(
+          clientId,
+          options
+        )
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      )
+    },
+    /**
+     * reestablece un cliente que fue eliminado temporalmente
+     * @summary
+     * @param {number} clientId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async clientsControllerRestoreClient(
+      clientId: number,
+      options?: AxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<ClientsControllerCreateClient201Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.clientsControllerRestoreClient(
+          clientId,
+          options
+        )
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      )
+    },
+    /**
+     * Elimina un cliente por id, se conservan sus datos (borrado logico)
+     * @summary
+     * @param {number} clientId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async clientsControllerSoftRemoveClient(
+      clientId: number,
+      options?: AxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<ClientsControllerCreateClient201Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.clientsControllerSoftRemoveClient(
           clientId,
           options
         )
@@ -1602,14 +1956,16 @@ export const ClientesApiFactory = function (
     /**
      * Obtiene una lista de clientes registrados en el sistema, con informacion basica
      * @summary
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     clientsControllerFindClients(
+      inactive?: 0 | 1,
       options?: any
     ): AxiosPromise<ClientsControllerFindClients200Response> {
       return localVarFp
-        .clientsControllerFindClients(options)
+        .clientsControllerFindClients(inactive, options)
         .then((request) => request(axios, basePath))
     },
     /**
@@ -1628,18 +1984,48 @@ export const ClientesApiFactory = function (
         .then((request) => request(axios, basePath))
     },
     /**
-     * Elimina un cliente por id
+     * Elimina un cliente por id por completo de la base de datos
      * @summary
      * @param {number} clientId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    clientsControllerRemove(
+    clientsControllerForceRemoveClient(
       clientId: number,
       options?: any
     ): AxiosPromise<ClientsControllerCreateClient201Response> {
       return localVarFp
-        .clientsControllerRemove(clientId, options)
+        .clientsControllerForceRemoveClient(clientId, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     * reestablece un cliente que fue eliminado temporalmente
+     * @summary
+     * @param {number} clientId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    clientsControllerRestoreClient(
+      clientId: number,
+      options?: any
+    ): AxiosPromise<ClientsControllerCreateClient201Response> {
+      return localVarFp
+        .clientsControllerRestoreClient(clientId, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     * Elimina un cliente por id, se conservan sus datos (borrado logico)
+     * @summary
+     * @param {number} clientId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    clientsControllerSoftRemoveClient(
+      clientId: number,
+      options?: any
+    ): AxiosPromise<ClientsControllerCreateClient201Response> {
+      return localVarFp
+        .clientsControllerSoftRemoveClient(clientId, options)
         .then((request) => request(axios, basePath))
     },
     /**
@@ -1689,13 +2075,17 @@ export class ClientesApi extends BaseAPI {
   /**
    * Obtiene una lista de clientes registrados en el sistema, con informacion basica
    * @summary
+   * @param {0 | 1} [inactive]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ClientesApi
    */
-  public clientsControllerFindClients(options?: AxiosRequestConfig) {
+  public clientsControllerFindClients(
+    inactive?: 0 | 1,
+    options?: AxiosRequestConfig
+  ) {
     return ClientesApiFp(this.configuration)
-      .clientsControllerFindClients(options)
+      .clientsControllerFindClients(inactive, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
@@ -1717,19 +2107,53 @@ export class ClientesApi extends BaseAPI {
   }
 
   /**
-   * Elimina un cliente por id
+   * Elimina un cliente por id por completo de la base de datos
    * @summary
    * @param {number} clientId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ClientesApi
    */
-  public clientsControllerRemove(
+  public clientsControllerForceRemoveClient(
     clientId: number,
     options?: AxiosRequestConfig
   ) {
     return ClientesApiFp(this.configuration)
-      .clientsControllerRemove(clientId, options)
+      .clientsControllerForceRemoveClient(clientId, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   * reestablece un cliente que fue eliminado temporalmente
+   * @summary
+   * @param {number} clientId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ClientesApi
+   */
+  public clientsControllerRestoreClient(
+    clientId: number,
+    options?: AxiosRequestConfig
+  ) {
+    return ClientesApiFp(this.configuration)
+      .clientsControllerRestoreClient(clientId, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   * Elimina un cliente por id, se conservan sus datos (borrado logico)
+   * @summary
+   * @param {number} clientId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ClientesApi
+   */
+  public clientsControllerSoftRemoveClient(
+    clientId: number,
+    options?: AxiosRequestConfig
+  ) {
+    return ClientesApiFp(this.configuration)
+      .clientsControllerSoftRemoveClient(clientId, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
@@ -1786,6 +2210,10 @@ export const RegimenFiscalApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
 
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
         baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -1830,6 +2258,10 @@ export const RegimenFiscalApiAxiosParamCreator = function (
       }
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
@@ -1996,17 +2428,22 @@ export const UsersApiAxiosParamCreator = function (
 ) {
   return {
     /**
-     *
-     * @param {object} body
+     * create users, email is unique
+     * @summary
+     * @param {CreateUserDto} createUserDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    usersControllerCreate: async (
-      body: object,
+    usersControllerCreateUser: async (
+      createUserDto: CreateUserDto,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'body' is not null or undefined
-      assertParamExists('usersControllerCreate', 'body', body)
+      // verify required parameter 'createUserDto' is not null or undefined
+      assertParamExists(
+        'usersControllerCreateUser',
+        'createUserDto',
+        createUserDto
+      )
       const localVarPath = `/users`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
@@ -2023,6 +2460,10 @@ export const UsersApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
 
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
       localVarHeaderParameter['Content-Type'] = 'application/json'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
@@ -2034,7 +2475,7 @@ export const UsersApiAxiosParamCreator = function (
         ...options.headers,
       }
       localVarRequestOptions.data = serializeDataIfNeeded(
-        body,
+        createUserDto,
         localVarRequestOptions,
         configuration
       )
@@ -2045,11 +2486,14 @@ export const UsersApiAxiosParamCreator = function (
       }
     },
     /**
-     *
+     * obtener un listado de todos los usuarios del sistema, con filtro de usuarios inactivos
+     * @summary
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     usersControllerFindAll: async (
+      inactive?: 0 | 1,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
       const localVarPath = `/users`
@@ -2068,6 +2512,14 @@ export const UsersApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
 
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      if (inactive !== undefined) {
+        localVarQueryParameter['inactive'] = inactive
+      }
+
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
         baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -2083,7 +2535,8 @@ export const UsersApiAxiosParamCreator = function (
       }
     },
     /**
-     *
+     * e¿obtener todos los datos de un usuario
+     * @summary
      * @param {number} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -2113,6 +2566,10 @@ export const UsersApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
 
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
         baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -2129,19 +2586,19 @@ export const UsersApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {string} id
+     * @param {number} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    usersControllerRemove: async (
-      id: string,
+    usersControllerForceRemoveUser: async (
+      userId: number,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'id' is not null or undefined
-      assertParamExists('usersControllerRemove', 'id', id)
-      const localVarPath = `/users/{id}`.replace(
-        `{${'id'}}`,
-        encodeURIComponent(String(id))
+      // verify required parameter 'userId' is not null or undefined
+      assertParamExists('usersControllerForceRemoveUser', 'userId', userId)
+      const localVarPath = `/users/{userId}/destroy`.replace(
+        `{${'userId'}}`,
+        encodeURIComponent(String(userId))
       )
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
@@ -2158,6 +2615,10 @@ export const UsersApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
 
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
         baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -2173,24 +2634,25 @@ export const UsersApiAxiosParamCreator = function (
       }
     },
     /**
-     *
-     * @param {string} id
-     * @param {object} body
+     * generar una nueva contraseña para un usuario
+     * @summary
+     * @param {number} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    usersControllerUpdate: async (
-      id: string,
-      body: object,
+    usersControllerRegeneratePasswordUser: async (
+      userId: number,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'id' is not null or undefined
-      assertParamExists('usersControllerUpdate', 'id', id)
-      // verify required parameter 'body' is not null or undefined
-      assertParamExists('usersControllerUpdate', 'body', body)
-      const localVarPath = `/users/{id}`.replace(
-        `{${'id'}}`,
-        encodeURIComponent(String(id))
+      // verify required parameter 'userId' is not null or undefined
+      assertParamExists(
+        'usersControllerRegeneratePasswordUser',
+        'userId',
+        userId
+      )
+      const localVarPath = `/users/{userId}/password`.replace(
+        `{${'userId'}}`,
+        encodeURIComponent(String(userId))
       )
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
@@ -2207,6 +2669,166 @@ export const UsersApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
 
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     *
+     * @param {number} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersControllerRestoreUser: async (
+      userId: number,
+      options: AxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'userId' is not null or undefined
+      assertParamExists('usersControllerRestoreUser', 'userId', userId)
+      const localVarPath = `/users/{userId}/restore`.replace(
+        `{${'userId'}}`,
+        encodeURIComponent(String(userId))
+      )
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     *
+     * @param {number} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersControllerSoftRemoveUser: async (
+      userId: number,
+      options: AxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'userId' is not null or undefined
+      assertParamExists('usersControllerSoftRemoveUser', 'userId', userId)
+      const localVarPath = `/users/{userId}`.replace(
+        `{${'userId'}}`,
+        encodeURIComponent(String(userId))
+      )
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'DELETE',
+        ...baseOptions,
+        ...options,
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     * actualizar un usuario dado su id, con un body de los datos a actualizar
+     * @summary
+     * @param {number} userId
+     * @param {CreateUserDto} createUserDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersControllerUpdateUser: async (
+      userId: number,
+      createUserDto: CreateUserDto,
+      options: AxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'userId' is not null or undefined
+      assertParamExists('usersControllerUpdateUser', 'userId', userId)
+      // verify required parameter 'createUserDto' is not null or undefined
+      assertParamExists(
+        'usersControllerUpdateUser',
+        'createUserDto',
+        createUserDto
+      )
+      const localVarPath = `/users/{userId}`.replace(
+        `{${'userId'}}`,
+        encodeURIComponent(String(userId))
+      )
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'PUT',
+        ...baseOptions,
+        ...options,
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
       localVarHeaderParameter['Content-Type'] = 'application/json'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
@@ -2218,7 +2840,7 @@ export const UsersApiAxiosParamCreator = function (
         ...options.headers,
       }
       localVarRequestOptions.data = serializeDataIfNeeded(
-        body,
+        createUserDto,
         localVarRequestOptions,
         configuration
       )
@@ -2239,19 +2861,26 @@ export const UsersApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = UsersApiAxiosParamCreator(configuration)
   return {
     /**
-     *
-     * @param {object} body
+     * create users, email is unique
+     * @summary
+     * @param {CreateUserDto} createUserDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async usersControllerCreate(
-      body: object,
+    async usersControllerCreateUser(
+      createUserDto: CreateUserDto,
       options?: AxiosRequestConfig
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<UsersControllerCreateUser201Response>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.usersControllerCreate(body, options)
+        await localVarAxiosParamCreator.usersControllerCreateUser(
+          createUserDto,
+          options
+        )
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -2260,17 +2889,51 @@ export const UsersApiFp = function (configuration?: Configuration) {
       )
     },
     /**
-     *
+     * obtener un listado de todos los usuarios del sistema, con filtro de usuarios inactivos
+     * @summary
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async usersControllerFindAll(
+      inactive?: 0 | 1,
       options?: AxiosRequestConfig
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<UsersControllerFindAll200Response>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.usersControllerFindAll(options)
+        await localVarAxiosParamCreator.usersControllerFindAll(
+          inactive,
+          options
+        )
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      )
+    },
+    /**
+     * e¿obtener todos los datos de un usuario
+     * @summary
+     * @param {number} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async usersControllerFindOne(
+      userId: number,
+      options?: AxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<UsersControllerFindOne200Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.usersControllerFindOne(userId, options)
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -2284,14 +2947,48 @@ export const UsersApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async usersControllerFindOne(
+    async usersControllerForceRemoveUser(
       userId: number,
       options?: AxiosRequestConfig
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<UsersControllerFindOne200Response>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.usersControllerFindOne(userId, options)
+        await localVarAxiosParamCreator.usersControllerForceRemoveUser(
+          userId,
+          options
+        )
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      )
+    },
+    /**
+     * generar una nueva contraseña para un usuario
+     * @summary
+     * @param {number} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async usersControllerRegeneratePasswordUser(
+      userId: number,
+      options?: AxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<UsersControllerCreateUser201Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.usersControllerRegeneratePasswordUser(
+          userId,
+          options
+        )
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -2301,18 +2998,24 @@ export const UsersApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {string} id
+     * @param {number} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async usersControllerRemove(
-      id: string,
+    async usersControllerRestoreUser(
+      userId: number,
       options?: AxiosRequestConfig
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<UsersControllerFindOne200Response>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.usersControllerRemove(id, options)
+        await localVarAxiosParamCreator.usersControllerRestoreUser(
+          userId,
+          options
+        )
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -2322,20 +3025,55 @@ export const UsersApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {string} id
-     * @param {object} body
+     * @param {number} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async usersControllerUpdate(
-      id: string,
-      body: object,
+    async usersControllerSoftRemoveUser(
+      userId: number,
       options?: AxiosRequestConfig
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<UsersControllerFindOne200Response>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.usersControllerUpdate(id, body, options)
+        await localVarAxiosParamCreator.usersControllerSoftRemoveUser(
+          userId,
+          options
+        )
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      )
+    },
+    /**
+     * actualizar un usuario dado su id, con un body de los datos a actualizar
+     * @summary
+     * @param {number} userId
+     * @param {CreateUserDto} createUserDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async usersControllerUpdateUser(
+      userId: number,
+      createUserDto: CreateUserDto,
+      options?: AxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<UsersControllerFindOne200Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.usersControllerUpdateUser(
+          userId,
+          createUserDto,
+          options
+        )
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -2358,24 +3096,48 @@ export const UsersApiFactory = function (
   const localVarFp = UsersApiFp(configuration)
   return {
     /**
-     *
-     * @param {object} body
+     * create users, email is unique
+     * @summary
+     * @param {CreateUserDto} createUserDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    usersControllerCreate(body: object, options?: any): AxiosPromise<string> {
+    usersControllerCreateUser(
+      createUserDto: CreateUserDto,
+      options?: any
+    ): AxiosPromise<UsersControllerCreateUser201Response> {
       return localVarFp
-        .usersControllerCreate(body, options)
+        .usersControllerCreateUser(createUserDto, options)
         .then((request) => request(axios, basePath))
     },
     /**
-     *
+     * obtener un listado de todos los usuarios del sistema, con filtro de usuarios inactivos
+     * @summary
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    usersControllerFindAll(options?: any): AxiosPromise<Array<User>> {
+    usersControllerFindAll(
+      inactive?: 0 | 1,
+      options?: any
+    ): AxiosPromise<UsersControllerFindAll200Response> {
       return localVarFp
-        .usersControllerFindAll(options)
+        .usersControllerFindAll(inactive, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     * e¿obtener todos los datos de un usuario
+     * @summary
+     * @param {number} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersControllerFindOne(
+      userId: number,
+      options?: any
+    ): AxiosPromise<UsersControllerFindOne200Response> {
+      return localVarFp
+        .usersControllerFindOne(userId, options)
         .then((request) => request(axios, basePath))
     },
     /**
@@ -2384,36 +3146,72 @@ export const UsersApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    usersControllerFindOne(userId: number, options?: any): AxiosPromise<User> {
-      return localVarFp
-        .usersControllerFindOne(userId, options)
-        .then((request) => request(axios, basePath))
-    },
-    /**
-     *
-     * @param {string} id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    usersControllerRemove(id: string, options?: any): AxiosPromise<string> {
-      return localVarFp
-        .usersControllerRemove(id, options)
-        .then((request) => request(axios, basePath))
-    },
-    /**
-     *
-     * @param {string} id
-     * @param {object} body
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    usersControllerUpdate(
-      id: string,
-      body: object,
+    usersControllerForceRemoveUser(
+      userId: number,
       options?: any
-    ): AxiosPromise<string> {
+    ): AxiosPromise<UsersControllerFindOne200Response> {
       return localVarFp
-        .usersControllerUpdate(id, body, options)
+        .usersControllerForceRemoveUser(userId, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     * generar una nueva contraseña para un usuario
+     * @summary
+     * @param {number} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersControllerRegeneratePasswordUser(
+      userId: number,
+      options?: any
+    ): AxiosPromise<UsersControllerCreateUser201Response> {
+      return localVarFp
+        .usersControllerRegeneratePasswordUser(userId, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     *
+     * @param {number} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersControllerRestoreUser(
+      userId: number,
+      options?: any
+    ): AxiosPromise<UsersControllerFindOne200Response> {
+      return localVarFp
+        .usersControllerRestoreUser(userId, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     *
+     * @param {number} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersControllerSoftRemoveUser(
+      userId: number,
+      options?: any
+    ): AxiosPromise<UsersControllerFindOne200Response> {
+      return localVarFp
+        .usersControllerSoftRemoveUser(userId, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     * actualizar un usuario dado su id, con un body de los datos a actualizar
+     * @summary
+     * @param {number} userId
+     * @param {CreateUserDto} createUserDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersControllerUpdateUser(
+      userId: number,
+      createUserDto: CreateUserDto,
+      options?: any
+    ): AxiosPromise<UsersControllerFindOne200Response> {
+      return localVarFp
+        .usersControllerUpdateUser(userId, createUserDto, options)
         .then((request) => request(axios, basePath))
     },
   }
@@ -2427,32 +3225,42 @@ export const UsersApiFactory = function (
  */
 export class UsersApi extends BaseAPI {
   /**
-   *
-   * @param {object} body
+   * create users, email is unique
+   * @summary
+   * @param {CreateUserDto} createUserDto
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UsersApi
    */
-  public usersControllerCreate(body: object, options?: AxiosRequestConfig) {
+  public usersControllerCreateUser(
+    createUserDto: CreateUserDto,
+    options?: AxiosRequestConfig
+  ) {
     return UsersApiFp(this.configuration)
-      .usersControllerCreate(body, options)
+      .usersControllerCreateUser(createUserDto, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
   /**
-   *
+   * obtener un listado de todos los usuarios del sistema, con filtro de usuarios inactivos
+   * @summary
+   * @param {0 | 1} [inactive]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UsersApi
    */
-  public usersControllerFindAll(options?: AxiosRequestConfig) {
+  public usersControllerFindAll(
+    inactive?: 0 | 1,
+    options?: AxiosRequestConfig
+  ) {
     return UsersApiFp(this.configuration)
-      .usersControllerFindAll(options)
+      .usersControllerFindAll(inactive, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
   /**
-   *
+   * e¿obtener todos los datos de un usuario
+   * @summary
    * @param {number} userId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -2466,32 +3274,85 @@ export class UsersApi extends BaseAPI {
 
   /**
    *
-   * @param {string} id
+   * @param {number} userId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UsersApi
    */
-  public usersControllerRemove(id: string, options?: AxiosRequestConfig) {
+  public usersControllerForceRemoveUser(
+    userId: number,
+    options?: AxiosRequestConfig
+  ) {
     return UsersApiFp(this.configuration)
-      .usersControllerRemove(id, options)
+      .usersControllerForceRemoveUser(userId, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   * generar una nueva contraseña para un usuario
+   * @summary
+   * @param {number} userId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UsersApi
+   */
+  public usersControllerRegeneratePasswordUser(
+    userId: number,
+    options?: AxiosRequestConfig
+  ) {
+    return UsersApiFp(this.configuration)
+      .usersControllerRegeneratePasswordUser(userId, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
   /**
    *
-   * @param {string} id
-   * @param {object} body
+   * @param {number} userId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UsersApi
    */
-  public usersControllerUpdate(
-    id: string,
-    body: object,
+  public usersControllerRestoreUser(
+    userId: number,
     options?: AxiosRequestConfig
   ) {
     return UsersApiFp(this.configuration)
-      .usersControllerUpdate(id, body, options)
+      .usersControllerRestoreUser(userId, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   *
+   * @param {number} userId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UsersApi
+   */
+  public usersControllerSoftRemoveUser(
+    userId: number,
+    options?: AxiosRequestConfig
+  ) {
+    return UsersApiFp(this.configuration)
+      .usersControllerSoftRemoveUser(userId, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   * actualizar un usuario dado su id, con un body de los datos a actualizar
+   * @summary
+   * @param {number} userId
+   * @param {CreateUserDto} createUserDto
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UsersApi
+   */
+  public usersControllerUpdateUser(
+    userId: number,
+    createUserDto: CreateUserDto,
+    options?: AxiosRequestConfig
+  ) {
+    return UsersApiFp(this.configuration)
+      .usersControllerUpdateUser(userId, createUserDto, options)
       .then((request) => request(this.axios, this.basePath))
   }
 }

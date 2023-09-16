@@ -14,6 +14,14 @@
         <q-toolbar-title> S&amp;B </q-toolbar-title>
 
         <div>{{ authStore?.user?.name }}</div>
+        <q-btn
+          icon="logout"
+          size="sm"
+          flat
+          rounded
+          class="q-ml-xs"
+          @click="logout"
+        ></q-btn>
       </q-toolbar>
     </q-header>
 
@@ -71,12 +79,20 @@
 </template>
 
 <script setup lang="ts">
+import { useQuasar } from 'quasar'
 import { ROUTER_NAMES } from 'src/router'
 import { useAuthStore } from 'src/stores/auth-store'
 import { ref } from 'vue'
-import { RouteLocationRaw } from 'vue-router'
+import { RouteLocationRaw, useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
+const $q = useQuasar()
+const router = useRouter()
+
+const logout = () => {
+  $q.localStorage.clear()
+  router.push({ name: ROUTER_NAMES.LOGIN })
+}
 
 const mainLinks = [
   {

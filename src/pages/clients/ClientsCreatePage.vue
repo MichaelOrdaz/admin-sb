@@ -17,7 +17,12 @@
           </q-card-section>
 
           <q-card-section>
-            <q-form @submit="onSubmit" greedy>
+            <q-form
+              @submit="onSubmit"
+              greedy
+              ref="clientForm"
+              @reset="resetForm"
+            >
               <div class="row q-mb-md">
                 <div class="col text-weight-bold">Datos generales</div>
               </div>
@@ -62,12 +67,17 @@
                   <q-input
                     color="white"
                     filled
-                    v-model="createClient.rfc"
-                    label="RFC"
+                    :model-value="createClient.rfc"
+                    @update:model-value="
+                      (value) => (createClient.rfc = (value as string)?.toUpperCase())
+                    "
+                    label="RFC *"
                     lazy-rules
                     :rules="[
                       (val) => (val && val.length > 0) || 'Campo requerido',
+                      (val) => REGEX.RFC_PATTERN.test(val) || 'RFC mal formado',
                     ]"
+                    maxlength="13"
                   />
                 </div>
 
@@ -75,12 +85,19 @@
                   <q-input
                     color="white"
                     filled
-                    v-model="createClient.curp"
+                    :model-value="createClient.curp"
+                    @update:model-value="
+                      (value) => (createClient.curp = (value as string)?.toUpperCase())
+                    "
                     label="CURP"
                     lazy-rules
                     :rules="[
-                      (val) => (val && val.length > 0) || 'Campo requerido',
+                      (val) =>
+                        val.length === 0 ||
+                        REGEX.CURP_PATTERN.test(val) ||
+                        'CURP mal formado',
                     ]"
+                    maxlength="18"
                   />
                 </div>
 
@@ -93,7 +110,9 @@
                     lazy-rules
                     :rules="[
                       (val) => (val && val.length > 0) || 'Campo requerido',
+                      'email',
                     ]"
+                    type="email"
                   />
                 </div>
 
@@ -103,6 +122,7 @@
                     filled
                     v-model="createClient.phone"
                     label="Teléfono"
+                    type="tel"
                   />
                 </div>
 
@@ -112,6 +132,7 @@
                     filled
                     v-model="createClient.phone2"
                     label="Teléfono alternativo"
+                    type="tel"
                   />
                 </div>
               </div>
@@ -120,7 +141,7 @@
                 <div class="col text-weight-bold">Regimen fiscal</div>
               </div>
 
-              <div class="row q-col-gutter-sm items-baseline">
+              <div class="row q-col-gutter-sm items-stretch">
                 <template
                   v-for="(regimeClient, index) in regimesClient"
                   :key="index"
@@ -129,7 +150,7 @@
                     <q-select
                       color="white"
                       filled
-                      label="Regimen fiscal"
+                      label="Regimen fiscal *"
                       :options="regimesOptionsMapped"
                       @update:model-value="
                         (value) => updateRegimeClient(value, index)
@@ -140,6 +161,7 @@
                   </div>
                   <div class="col-auto" v-show="regimesClient.length > 1">
                     <q-btn
+                      class="q-mt-md"
                       @click="regimesClient.splice(index, 1)"
                       color="negative"
                       :disable="regimesClient.length <= 1"
@@ -265,11 +287,7 @@
                     color="white"
                     filled
                     v-model="createClient.cologne"
-                    label="Colonia *"
-                    lazy-rules
-                    :rules="[
-                      (val) => (val && val.length > 0) || 'Campo requerido',
-                    ]"
+                    label="Colonia"
                   />
                 </div>
 
@@ -278,11 +296,8 @@
                     color="white"
                     filled
                     v-model="createClient.postalCode"
-                    label="Código Postal *"
-                    lazy-rules
-                    :rules="[
-                      (val) => (val && val.length > 0) || 'Campo requerido',
-                    ]"
+                    label="Código Postal"
+                    maxlength="5"
                   />
                 </div>
 
@@ -292,6 +307,7 @@
                     filled
                     v-model="createClient.province"
                     label="Ciudad"
+                    maxlength="100"
                   />
                 </div>
 
@@ -319,7 +335,7 @@
                     color="white"
                     filled
                     v-model="createClient.legalRepresentativeFullname"
-                    label="Nombre completo representante"
+                    label="Nombre completo representante *"
                     lazy-rules
                     :rules="[
                       (val) => (val && val.length > 0) || 'Campo requerido',
@@ -331,11 +347,15 @@
                   <q-input
                     color="white"
                     filled
-                    v-model="createClient.legalRepresentativeRFC"
-                    label="RFC representante"
+                    :model-value="createClient.legalRepresentativeRFC"
+                    @update:model-value="
+                      (value) => (createClient.legalRepresentativeRFC = (value as string)?.toUpperCase())
+                    "
+                    label="RFC representante *"
                     lazy-rules
                     :rules="[
                       (val) => (val && val.length > 0) || 'Campo requerido',
+                      (val) => REGEX.RFC_PATTERN.test(val) || 'RFC mal formado',
                     ]"
                   />
                 </div>
@@ -344,23 +364,37 @@
                   <q-input
                     color="white"
                     filled
-                    v-model="createClient.legalRepresentativeCURP"
+                    :model-value="createClient.legalRepresentativeCURP"
+                    @update:model-value="
+                      (value) => (createClient.legalRepresentativeCURP = (value as string)?.toUpperCase())
+                    "
                     label="CURP representante"
                     lazy-rules
                     :rules="[
-                      (val) => (val && val.length > 0) || 'Campo requerido',
+                      (val) =>
+                        val.length === 0 ||
+                        REGEX.CURP_PATTERN.test(val) ||
+                        'CURP mal formado',
                     ]"
                   />
                 </div>
               </div>
 
-              <div class="row">
+              <div class="row q-my-sm">
                 <div class="col-12">
                   <q-btn
                     icon="save"
                     label="Guardar cliente"
                     type="submit"
                     color="primary"
+                  />
+
+                  <q-btn
+                    class="q-ml-sm"
+                    label="cancelar"
+                    color="grey-9"
+                    type="reset"
+                    @click="$router.push({ name: ROUTER_NAMES.CLIENTS_LIST })"
                   />
                 </div>
               </div>
@@ -373,55 +407,44 @@
 </template>
 
 <script setup lang="ts">
-import { useMeta } from 'quasar'
-import {
-  Client,
-  ClientActivitiesDto,
-  ClientesApi,
-  CreateClientDto,
-  Regime,
-  RegimenFiscalApi,
-} from 'src/api-client'
+import { QForm, useMeta, useQuasar } from 'quasar'
+import { ClientesApi, CreateClientDto, RegimenFiscalApi } from 'src/api-client'
 import { ROUTER_NAMES } from 'src/router'
-import { useAuthStore } from 'src/stores/auth-store'
 import { ref } from 'vue'
-import { STATES } from '../../constants'
+import { STATES, REGEX } from '../../constants'
+import { AxiosError } from 'axios'
 
-const authStore = useAuthStore()
-const token = { headers: { Authorization: `Bearer ${authStore.token}` } }
+const $q = useQuasar()
 
 useMeta({
   title: 'Clientes::S&B',
 })
 
-interface CreateClientDtoExtendido extends CreateClientDto {
-  legalRepresentativeFullname: string
-  legalRepresentativeRFC: string
-  legalRepresentativeCURP: string
-}
+const clientForm = ref<QForm | null>(null)
 
-const createClient = ref<Partial<CreateClientDtoExtendido>>({
-  name: '',
-  paternalSurname: '',
+const createClient = ref<Partial<CreateClientDto>>({
+  name: 'Michael',
+  paternalSurname: 'Ordaz',
   maternalSurname: '',
-  email: '',
+  email: 'ordaz@sb.com',
   phone: '',
   phone2: '',
-  rfc: '',
+  rfc: 'AOMM931128W25',
   curp: '',
-  street: '',
+  street: 'del cerro',
   outdoorNumber: '',
   interiorNumber: '',
   cologne: '',
   postalCode: '',
   province: '',
   state: '',
-  legalRepresentativeFullname: '',
-  legalRepresentativeRFC: '',
+  legalRepresentativeFullname: 'Michael ordaz',
+  legalRepresentativeRFC: 'AOMM931128W25',
   legalRepresentativeCURP: '',
 })
 
-const activityItemBase = { activity: null, percentage: null }
+const activityItemBase: { activity: null | string; percentage: null | number } =
+  { activity: null, percentage: null }
 const regimesClient = ref<any[]>([null])
 const activitiesClient = ref([{ ...activityItemBase }])
 
@@ -431,9 +454,7 @@ const regimesOptionsMapped = ref<
 
 // regimes
 const getRegimes = async () => {
-  const response = await new RegimenFiscalApi().regimeControllerFindAllRegimes(
-    token
-  )
+  const response = await new RegimenFiscalApi().regimeControllerFindAllRegimes()
   if (response.data.data?.regimes) {
     regimesOptionsMapped.value = response.data.data?.regimes.map(
       ({ id, name }) => ({
@@ -458,23 +479,65 @@ const addRegimeItem = () => regimesClient.value.push(null)
 const addActivityItem = () =>
   activitiesClient.value.push({ ...activityItemBase })
 
+const resetForm = () => {
+  createClient.value.name = ''
+  createClient.value.paternalSurname = ''
+  createClient.value.maternalSurname = ''
+  createClient.value.email = ''
+  createClient.value.phone = ''
+  createClient.value.phone2 = ''
+  createClient.value.rfc = ''
+  createClient.value.curp = ''
+  createClient.value.street = ''
+  createClient.value.outdoorNumber = ''
+  createClient.value.interiorNumber = ''
+  createClient.value.cologne = ''
+  createClient.value.postalCode = ''
+  createClient.value.province = ''
+  createClient.value.state = ''
+  createClient.value.legalRepresentativeFullname = ''
+  createClient.value.legalRepresentativeRFC = ''
+  createClient.value.legalRepresentativeCURP = ''
+
+  regimesClient.value = [null]
+  activitiesClient.value = [{ ...activityItemBase }]
+}
+
 const onSubmit = async () => {
+  const totalPercentage = activitiesClient.value.reduce(
+    (acc, item) => acc + +item.percentage!,
+    0
+  )
+
+  if (totalPercentage !== 100) {
+    $q.notify({
+      color: 'negative',
+      message: 'El total de porcentaje de las actividades deben de dar 100%',
+    })
+    return
+  }
+
   const createClientRequest: CreateClientDto = {
-    name: createClient.value.name || '',
-    paternalSurname: createClient.value.paternalSurname || '',
-    maternalSurname: createClient.value.maternalSurname || '',
-    email: createClient.value.email || '',
-    phone: createClient.value.phone || '',
-    phone2: createClient.value.phone2 || '',
-    rfc: createClient.value.rfc || '',
-    curp: createClient.value.curp || '',
-    street: createClient.value.street || '',
-    outdoorNumber: createClient.value.outdoorNumber || '',
-    interiorNumber: createClient.value.interiorNumber || '',
-    cologne: createClient.value.cologne || '',
-    postalCode: createClient.value.postalCode || '',
-    province: createClient.value.province || '',
-    state: createClient.value.state || '',
+    name: createClient.value.name as string,
+    paternalSurname: createClient.value.paternalSurname,
+    maternalSurname: createClient.value.maternalSurname,
+    email: createClient.value.email as string,
+    phone: createClient.value.phone,
+    phone2: createClient.value.phone2,
+    rfc: createClient.value.rfc as string,
+    curp: createClient.value.curp,
+    street: createClient.value.street,
+    outdoorNumber: createClient.value.outdoorNumber,
+    interiorNumber: createClient.value.interiorNumber,
+    cologne: createClient.value.cologne,
+    postalCode: createClient.value.postalCode,
+    province: createClient.value.province,
+    state: createClient.value.state as string,
+    legalRepresentativeFullname: createClient.value
+      .legalRepresentativeFullname as string,
+    legalRepresentativeRFC: createClient.value.legalRepresentativeRFC as string,
+    legalRepresentativeCURP: createClient.value
+      .legalRepresentativeCURP as string,
     regimes: regimesClient.value.map((i) => +i.value as number),
     activities: activitiesClient.value.map((i) => ({
       name: i.activity!,
@@ -482,15 +545,39 @@ const onSubmit = async () => {
     })),
   }
 
-  const response = await new ClientesApi().clientsControllerCreateClient(
-    {
+  try {
+    Object.keys(createClientRequest).forEach((prop) => {
+      if (createClientRequest[prop as keyof CreateClientDto] === '') {
+        delete createClientRequest[prop as keyof CreateClientDto]
+      }
+    })
+
+    const response = await new ClientesApi().clientsControllerCreateClient({
       ...createClientRequest,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${authStore.token}`,
-      },
+    })
+    $q.notify({
+      color: 'positive',
+      message: 'Cliente agregado con exito',
+    })
+
+    resetForm()
+    clientForm.value!.reset()
+    clientForm.value!.resetValidation()
+  } catch (e) {
+    console.log('error', e)
+    if (e instanceof AxiosError) {
+      $q.notify({
+        color: 'negative',
+        message: Array.isArray(e.response?.data?.message)
+          ? e.response?.data?.message.join(', ')
+          : e.response?.data?.message,
+      })
+      return
     }
-  )
+    $q.notify({
+      color: 'negative',
+      message: 'Error desconocido, reintenta',
+    })
+  }
 }
 </script>

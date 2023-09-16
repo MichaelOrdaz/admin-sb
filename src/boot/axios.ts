@@ -1,5 +1,8 @@
 import { boot } from 'quasar/wrappers'
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosError, AxiosInstance } from 'axios'
+import { LocalStorage, Notify } from 'quasar'
+import { AUTH_TOKEN } from 'src/stores/auth-store'
+import { ROUTER_NAMES } from 'src/router'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -25,6 +28,34 @@ export default boot(({ app }) => {
   app.config.globalProperties.$api = api
   // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
   //       so you can easily perform requests against your app's API
+
+  axios.defaults.headers.common[
+    'Authorization'
+  ] = `Bearer ${LocalStorage.getItem(AUTH_TOKEN)}`
+
+  axios.interceptors.response.use(
+    function (response) {
+      // Any status code that lie within the range of 2xx cause this function to trigger
+      // Do something with response data
+      return response
+    },
+    function (error: AxiosError) {
+      // Any status codes that falls outside the range of 2xx cause this function to trigger
+      // Do something with response error
+      if (
+        error.response &&
+        error.response.status === 401 &&
+        app.config.globalProperties.$route.name !== ROUTER_NAMES.LOGIN
+      ) {
+        // Aquí puedes realizar la acción que desees cuando se recibe un 401
+        Notify.create({
+          message: 'Lo siento la sesión a terminado, vuelva a iniciar sesión',
+        })
+        app.config.globalProperties.$router.push({ name: ROUTER_NAMES.LOGIN })
+      }
+      return Promise.reject(error)
+    }
+  )
 })
 
 export { api }
