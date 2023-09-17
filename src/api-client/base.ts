@@ -18,7 +18,7 @@ import type { Configuration } from './configuration'
 import type { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios'
 import globalAxios from 'axios'
 
-export const BASE_PATH = 'http://localhost:3000/api'.replace(/\/+$/, '')
+export const BASE_PATH = `${process.env.API_URL}`.replace(/\/+$/, '')
 
 /**
  *
