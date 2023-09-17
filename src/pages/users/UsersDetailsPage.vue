@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-md">
     <div class="row">
-      <div class="col-sm-9">
+      <div class="col-sm-9" v-if="user">
         <q-card>
           <q-card-actions>
             <q-btn
@@ -26,13 +26,24 @@
                 params: { userId: user?.id },
               }"
             />
-            <q-btn color="primary" icon="key" label="Renovar contraseña" />
+            <q-btn
+              color="primary"
+              icon="key"
+              label="Renovar contraseña"
+              @click="confirmRenewPassword = true"
+            />
             <q-btn
               color="yellow"
               text-color="black"
               icon="remove_circle"
               label="desactivar"
               @click="confirm = true"
+              :disable="authStore.user?.id === user?.id"
+              :title="
+                authStore.user?.id === user?.id
+                  ? 'No puedes desactivar a tu mismo usuario'
+                  : ''
+              "
             />
           </q-card-actions>
 
@@ -89,6 +100,47 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <q-dialog v-model="confirmRenewPassword" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="warning" color="warning" />
+          <span class="q-ml-sm" v-if="user"
+            >¿Deseas renovar la contraseña del usuario {{ user.name }}
+            {{ user?.paternalSurname }}
+            {{ user?.maternalSurname || '' }}.?</span
+          >
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            label="Renovar contraseña"
+            color="warning"
+            v-close-popup
+            @click="refreshPassword"
+          />
+          <q-btn flat label="cancelar" color="white" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="successPassword" @hide="() => (recoverPass = null)">
+      <q-card class="bg-primary">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">Contraseña reestablecida</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section v-if="user">
+          La contraseña del usuario {{ user?.name }}
+          {{ user?.paternalSurname }} fue reestablecida. <br />
+          La nueva contraseña es la siguiente, recuerdala:
+          <h4 class="text-center">{{ recoverPass || '' }}</h4>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -96,18 +148,23 @@
 import { useMeta, useQuasar } from 'quasar'
 import { User, UsersApi } from 'src/api-client'
 import { ROUTER_NAMES } from 'src/router'
+import { useAuthStore } from 'src/stores/auth-store'
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
 const router = useRouter()
 const $q = useQuasar()
+const authStore = useAuthStore()
 
 useMeta({
   title: 'Usuarios::S&B',
 })
 
 const confirm = ref(false)
+const confirmRenewPassword = ref(false)
+const successPassword = ref(false)
+const recoverPass = ref<string | null>(null)
 
 const loading = ref(false)
 const user = ref<User | null>(null)
@@ -133,7 +190,7 @@ watch(
 const deleteUser = async () => {
   if (user.value) {
     try {
-      const response = await new UsersApi().usersControllerSoftRemoveUser(
+      await new UsersApi().usersControllerSoftRemoveUser(
         user.value?.id as number
       )
 
@@ -143,6 +200,24 @@ const deleteUser = async () => {
         color: 'primary',
         message: 'El usuario fue desactivado correctamente',
       })
+    } catch (e) {
+      $q.notify({
+        color: 'warning',
+        message: 'Ocurrio un error, reintente',
+      })
+    }
+  }
+}
+
+const refreshPassword = async () => {
+  if (user.value) {
+    try {
+      const response =
+        await new UsersApi().usersControllerRegeneratePasswordUser(
+          user.value?.id as number
+        )
+      recoverPass.value = response.data.data?.password as string
+      successPassword.value = true
     } catch (e) {
       $q.notify({
         color: 'warning',

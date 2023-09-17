@@ -53,6 +53,7 @@
                         icon="remove_circle"
                         @click=";(confirm = true), (selected = props.row)"
                         title="Desactivar usuario"
+                        :disable="authStore.user?.id === props.row.id"
                       />
                     </q-td>
                   </template>
@@ -111,8 +112,10 @@ import { QTableProps, useMeta, useQuasar } from 'quasar'
 import { ROUTER_NAMES } from 'src/router'
 import { User, UsersApi } from 'src/api-client'
 import { ref } from 'vue'
+import { useAuthStore } from 'src/stores/auth-store'
 
 const $q = useQuasar()
+const authStore = useAuthStore()
 
 useMeta({
   title: 'Usuarios::S&B',
@@ -170,7 +173,7 @@ const columns: QTableProps['columns'] = [
 const deleteClient = async () => {
   if (selected.value) {
     try {
-      const response = await new UsersApi().usersControllerSoftRemoveUser(
+      await new UsersApi().usersControllerSoftRemoveUser(
         selected.value?.id as number
       )
 
