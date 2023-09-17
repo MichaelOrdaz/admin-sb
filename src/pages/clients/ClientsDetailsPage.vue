@@ -21,7 +21,10 @@
               color="primary"
               icon="edit"
               label="editar"
-              :to="{ name: ROUTER_NAMES.CLIENTS_EDIT }"
+              :to="{
+                name: ROUTER_NAMES.CLIENTS_EDIT,
+                params: { clientId: client?.id },
+              }"
             />
             <q-btn
               color="yellow"

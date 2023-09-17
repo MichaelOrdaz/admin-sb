@@ -7,6 +7,12 @@ export const ROUTER_NAMES = {
   CLIENTS_NEW: 'clientes_nuevo',
   CLIENTS_DETAILS: 'clientes_detalle',
   CLIENTS_EDIT: 'clientes_edicion',
+
+  USERS_LIST: 'usuarios_listado',
+  USERS_REGISTER: 'usuarios_registro',
+  USERS_DETAILS: 'usuarios_detalles',
+  USERS_EDIT: 'usuarios_edicion',
+
   TIMES: 'tiempos',
   PASSWORDS: 'claves',
   USERS: 'usuarios',
@@ -29,6 +35,7 @@ const routes: RouteRecordRaw[] = [
         name: ROUTER_NAMES.HOME,
         component: () => import('pages/IndexPage.vue'),
       },
+      // clientes
       {
         path: 'clientes',
         name: ROUTER_NAMES.CLIENTS_LIST,
@@ -49,6 +56,28 @@ const routes: RouteRecordRaw[] = [
         name: ROUTER_NAMES.CLIENTS_EDIT,
         component: () => import('pages/clients/ClientsEditPage.vue'),
       },
+      // usuarios
+      {
+        path: 'usuarios',
+        name: ROUTER_NAMES.USERS_LIST,
+        component: () => import('pages/users/UsersListPage.vue'),
+      },
+      {
+        path: 'usuarios/registro',
+        name: ROUTER_NAMES.USERS_REGISTER,
+        component: () => import('pages/users/UsersCreatePage.vue'),
+      },
+      {
+        path: 'usuarios/:userId(\\d+)',
+        name: ROUTER_NAMES.USERS_DETAILS,
+        component: () => import('pages/users/UsersDetailsPage.vue'),
+      },
+      {
+        path: 'usuarios/:userId(\\d+)/edicion',
+        name: ROUTER_NAMES.USERS_EDIT,
+        component: () => import('pages/users/UsersEditPage.vue'),
+      },
+      // TODO; crear mas rutas
       {
         path: 'tiempos',
         name: ROUTER_NAMES.TIMES,
@@ -63,6 +92,11 @@ const routes: RouteRecordRaw[] = [
         path: 'claves',
         name: ROUTER_NAMES.PASSWORDS,
         component: () => import('pages/PasswordsPage.vue'),
+      },
+      {
+        path: 'configuraciones',
+        name: ROUTER_NAMES.SETTINGS,
+        component: () => import('pages/ConfigPage.vue'),
       },
     ],
   },

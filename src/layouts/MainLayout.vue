@@ -64,10 +64,13 @@
 
           <template v-if="authStore.user?.role === 'admin'">
             <q-item
-              clickable
-              v-ripple
               v-for="item in sistemLinks"
               :key="item.title"
+              clickable
+              v-ripple
+              :to="item.to"
+              active-class="active-page"
+              exact
             >
               <q-item-section avatar>
                 <q-icon :name="item.icon" />
@@ -135,12 +138,12 @@ const sistemLinks = [
   {
     title: 'Usuarios',
     icon: 'people',
-    to: { name: ROUTER_NAMES.HOME } as RouteLocationRaw,
+    to: { name: ROUTER_NAMES.USERS_LIST } as RouteLocationRaw,
   },
   {
     title: 'Configuraciones',
     icon: 'settings',
-    to: { name: ROUTER_NAMES.HOME } as RouteLocationRaw,
+    to: { name: ROUTER_NAMES.SETTINGS } as RouteLocationRaw,
   },
 ]
 
