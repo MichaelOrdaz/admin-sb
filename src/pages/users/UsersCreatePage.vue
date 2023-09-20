@@ -122,12 +122,30 @@
         </q-card>
       </div>
     </div>
+
+    <q-dialog v-model="successCreateUser" @hide="() => (userCreated = null)">
+      <q-card class="bg-primary">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">Contraseña asignada</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section v-if="userCreated">
+          La contraseña del nuevo usuario {{ userCreated?.user.name }}
+          {{ userCreated?.user.paternalSurname }} fue creada correctamente.
+          <br />
+          La contraseña es la siguiente, recuerdala:
+          <h4 class="text-center">{{ userCreated.password || '' }}</h4>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { QForm, useMeta, useQuasar } from 'quasar'
-import { Configuration, CreateUserDto, UsersApi } from 'src/api-client'
+import { Configuration, CreateUserDto, User, UsersApi } from 'src/api-client'
 import { ref } from 'vue'
 import { AxiosError } from 'axios'
 import { useAuthStore } from 'src/stores/auth-store'
@@ -140,6 +158,9 @@ useMeta({
 })
 
 const configToken = new Configuration({ accessToken: authStore.token })
+
+const successCreateUser = ref(false)
+const userCreated = ref<null | { user: User; password: string }>(null)
 
 const userForm = ref<QForm | null>(null)
 
@@ -189,9 +210,17 @@ const onSubmit = async () => {
       }
     })
 
-    await new UsersApi(configToken).usersControllerCreateUser({
+    const response = await new UsersApi(configToken).usersControllerCreateUser({
       ...createUserPayload,
     })
+
+    userCreated.value = {
+      user: response.data.data?.user as User,
+      password: response.data.data?.password as string,
+    }
+
+    successCreateUser.value = true
+
     $q.notify({
       color: 'positive',
       message: 'usuario agregado con exito',
