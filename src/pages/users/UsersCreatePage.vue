@@ -127,15 +127,19 @@
 
 <script setup lang="ts">
 import { QForm, useMeta, useQuasar } from 'quasar'
-import { CreateUserDto, UsersApi } from 'src/api-client'
+import { Configuration, CreateUserDto, UsersApi } from 'src/api-client'
 import { ref } from 'vue'
 import { AxiosError } from 'axios'
+import { useAuthStore } from 'src/stores/auth-store'
 
+const authStore = useAuthStore()
 const $q = useQuasar()
 
 useMeta({
   title: 'Usuarios::S&B',
 })
+
+const configToken = new Configuration({ accessToken: authStore.token })
 
 const userForm = ref<QForm | null>(null)
 
@@ -185,7 +189,7 @@ const onSubmit = async () => {
       }
     })
 
-    await new UsersApi().usersControllerCreateUser({
+    await new UsersApi(configToken).usersControllerCreateUser({
       ...createUserPayload,
     })
     $q.notify({

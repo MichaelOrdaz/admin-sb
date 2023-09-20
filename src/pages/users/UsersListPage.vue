@@ -110,12 +110,13 @@
 <script setup lang="ts">
 import { QTableProps, useMeta, useQuasar } from 'quasar'
 import { ROUTER_NAMES } from 'src/router'
-import { User, UsersApi } from 'src/api-client'
+import { Configuration, User, UsersApi } from 'src/api-client'
 import { ref } from 'vue'
 import { useAuthStore } from 'src/stores/auth-store'
 
 const $q = useQuasar()
 const authStore = useAuthStore()
+const configToken = new Configuration({ accessToken: authStore.token })
 
 useMeta({
   title: 'Usuarios::S&B',
@@ -130,7 +131,7 @@ const users = ref<User[]>([])
 
 const getUsers = async () => {
   loading.value = true
-  const response = await new UsersApi().usersControllerFindAll()
+  const response = await new UsersApi(configToken).usersControllerFindAll()
   users.value = response.data.data?.users as User[]
   loading.value = false
 }
@@ -173,7 +174,7 @@ const columns: QTableProps['columns'] = [
 const deleteClient = async () => {
   if (selected.value) {
     try {
-      await new UsersApi().usersControllerSoftRemoveUser(
+      await new UsersApi(configToken).usersControllerSoftRemoveUser(
         selected.value?.id as number
       )
 

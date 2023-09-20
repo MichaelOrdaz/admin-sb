@@ -146,7 +146,7 @@
 
 <script setup lang="ts">
 import { useMeta, useQuasar } from 'quasar'
-import { User, UsersApi } from 'src/api-client'
+import { Configuration, User, UsersApi } from 'src/api-client'
 import { ROUTER_NAMES } from 'src/router'
 import { useAuthStore } from 'src/stores/auth-store'
 import { ref, watch } from 'vue'
@@ -156,6 +156,8 @@ const route = useRoute()
 const router = useRouter()
 const $q = useQuasar()
 const authStore = useAuthStore()
+
+const configToken = new Configuration({ accessToken: authStore.token })
 
 useMeta({
   title: 'Usuarios::S&B',
@@ -171,7 +173,7 @@ const user = ref<User | null>(null)
 
 const getUser = async () => {
   loading.value = true
-  const response = await new UsersApi().usersControllerFindOne(
+  const response = await new UsersApi(configToken).usersControllerFindOne(
     +route.params.userId
   )
   user.value = response.data.data?.user as User
@@ -190,7 +192,7 @@ watch(
 const deleteUser = async () => {
   if (user.value) {
     try {
-      await new UsersApi().usersControllerSoftRemoveUser(
+      await new UsersApi(configToken).usersControllerSoftRemoveUser(
         user.value?.id as number
       )
 
@@ -212,10 +214,9 @@ const deleteUser = async () => {
 const refreshPassword = async () => {
   if (user.value) {
     try {
-      const response =
-        await new UsersApi().usersControllerRegeneratePasswordUser(
-          user.value?.id as number
-        )
+      const response = await new UsersApi(
+        configToken
+      ).usersControllerRegeneratePasswordUser(user.value?.id as number)
       recoverPass.value = response.data.data?.password as string
       successPassword.value = true
     } catch (e) {

@@ -429,6 +429,7 @@ import { QForm, useMeta, useQuasar } from 'quasar'
 import {
   Client,
   ClientesApi,
+  Configuration,
   CreateClientDto,
   RegimenFiscalApi,
 } from 'src/api-client'
@@ -436,9 +437,14 @@ import { ref, watch } from 'vue'
 import { STATES, REGEX } from '../../constants'
 import { AxiosError } from 'axios'
 import { useRoute } from 'vue-router'
+import { useAuthStore } from 'src/stores/auth-store'
 
 const $q = useQuasar()
 const route = useRoute()
+
+const authStore = useAuthStore()
+const configToken = new Configuration({ accessToken: authStore.token })
+
 useMeta({
   title: 'Clientes::S&B',
 })
@@ -483,7 +489,9 @@ const regimesOptionsMapped = ref<
 
 // regimes
 const getRegimes = async () => {
-  const response = await new RegimenFiscalApi().regimeControllerFindAllRegimes()
+  const response = await new RegimenFiscalApi(
+    configToken
+  ).regimeControllerFindAllRegimes()
   if (response.data.data?.regimes) {
     regimesOptionsMapped.value = response.data.data?.regimes.map(
       ({ id, name }) => ({
@@ -577,12 +585,11 @@ const onSubmit = async () => {
       }
     })
 
-    const response = await new ClientesApi().clientsControllerUpdateClient(
-      client.value?.id as number,
-      {
-        ...createClientRequest,
-      }
-    )
+    const response = await new ClientesApi(
+      configToken
+    ).clientsControllerUpdateClient(client.value?.id as number, {
+      ...createClientRequest,
+    })
     $q.notify({
       color: 'positive',
       message: 'El Cliente fue guardado con exito',
@@ -611,33 +618,33 @@ const onSubmit = async () => {
 // recuperar datos del cliente
 const getClient = async () => {
   loading.value = true
-  const response = await new ClientesApi().clientsControllerFindOneClient(
-    +route.params.clientId
-  )
+  const response = await new ClientesApi(
+    configToken
+  ).clientsControllerFindOneClient(+route.params.clientId)
   client.value = response.data.data?.client as Client
   loading.value = false
 
   createClient.value.name = client.value.name
-  createClient.value.paternalSurname = client.value.paternalSurname
-  createClient.value.maternalSurname = client.value.maternalSurname
-  createClient.value.email = client.value.email
-  createClient.value.phone = client.value.phone
-  createClient.value.phone2 = client.value.phone2
-  createClient.value.rfc = client.value.rfc
-  createClient.value.curp = client.value.curp
-  createClient.value.street = client.value.street
-  createClient.value.outdoorNumber = client.value.outdoorNumber
-  createClient.value.interiorNumber = client.value.interiorNumber
-  createClient.value.cologne = client.value.cologne
-  createClient.value.postalCode = client.value.postalCode
-  createClient.value.province = client.value.province
-  createClient.value.state = client.value.state
+  createClient.value.paternalSurname = client.value.paternalSurname || ''
+  createClient.value.maternalSurname = client.value.maternalSurname || ''
+  createClient.value.email = client.value.email || ''
+  createClient.value.phone = client.value.phone || ''
+  createClient.value.phone2 = client.value.phone2 || ''
+  createClient.value.rfc = client.value.rfc || ''
+  createClient.value.curp = client.value.curp || ''
+  createClient.value.street = client.value.street || ''
+  createClient.value.outdoorNumber = client.value.outdoorNumber || ''
+  createClient.value.interiorNumber = client.value.interiorNumber || ''
+  createClient.value.cologne = client.value.cologne || ''
+  createClient.value.postalCode = client.value.postalCode || ''
+  createClient.value.province = client.value.province || ''
+  createClient.value.state = client.value.state || ''
   createClient.value.legalRepresentativeFullname =
-    client.value.legalRepresentativeFullname
+    client.value.legalRepresentativeFullname || ''
   createClient.value.legalRepresentativeRFC =
-    client.value.legalRepresentativeRFC
+    client.value.legalRepresentativeRFC || ''
   createClient.value.legalRepresentativeCURP =
-    client.value.legalRepresentativeCURP
+    client.value.legalRepresentativeCURP || ''
 
   if (client.value.regimes) {
     regimesClient.value = client.value.regimes?.map((i) => `${i.id}`)

@@ -1,8 +1,7 @@
 import { boot } from 'quasar/wrappers'
 import axios, { AxiosError, AxiosInstance } from 'axios'
-import { LocalStorage, Notify } from 'quasar'
-import { AUTH_TOKEN } from 'src/stores/auth-store'
 import { ROUTER_NAMES } from 'src/router'
+import { Notify } from 'quasar'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -16,22 +15,18 @@ declare module '@vue/runtime-core' {
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: 'https://api.example.com' })
+// const api = axios.create({ baseURL: 'https://api.example.com' })
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
-  app.config.globalProperties.$axios = axios
+  // app.config.globalProperties.$axios = axios
   // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
   //       so you won't necessarily have to import axios in each vue file
 
-  app.config.globalProperties.$api = api
+  // app.config.globalProperties.$api = api
   // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
   //       so you can easily perform requests against your app's API
-
-  axios.defaults.headers.common[
-    'Authorization'
-  ] = `Bearer ${LocalStorage.getItem(AUTH_TOKEN)}`
 
   axios.interceptors.response.use(
     function (response) {
@@ -49,7 +44,7 @@ export default boot(({ app }) => {
       ) {
         // Aquí puedes realizar la acción que desees cuando se recibe un 401
         Notify.create({
-          message: 'Lo siento la sesión a terminado, vuelva a iniciar sesión',
+          message: 'La sesión ha finalizado, vuelva a ingresar',
         })
         app.config.globalProperties.$router.push({ name: ROUTER_NAMES.LOGIN })
       }
@@ -58,4 +53,4 @@ export default boot(({ app }) => {
   )
 })
 
-export { api }
+// export { api }

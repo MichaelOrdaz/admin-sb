@@ -202,8 +202,9 @@
 
 <script setup lang="ts">
 import { useMeta, useQuasar } from 'quasar'
-import { Client, ClientesApi } from 'src/api-client'
+import { Client, ClientesApi, Configuration } from 'src/api-client'
 import { ROUTER_NAMES } from 'src/router'
+import { useAuthStore } from 'src/stores/auth-store'
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -215,6 +216,9 @@ useMeta({
   title: 'Clientes::S&B',
 })
 
+const authStore = useAuthStore()
+const configToken = new Configuration({ accessToken: authStore.token })
+
 const confirm = ref(false)
 
 const loading = ref(false)
@@ -222,9 +226,9 @@ const client = ref<Client | null>(null)
 
 const getClient = async () => {
   loading.value = true
-  const response = await new ClientesApi().clientsControllerFindOneClient(
-    +route.params.clientId
-  )
+  const response = await new ClientesApi(
+    configToken
+  ).clientsControllerFindOneClient(+route.params.clientId)
   client.value = response.data.data?.client as Client
   loading.value = false
 }
@@ -241,10 +245,9 @@ watch(
 const deleteClient = async () => {
   if (client.value) {
     try {
-      const response =
-        await new ClientesApi().clientsControllerSoftRemoveClient(
-          client.value?.id as number
-        )
+      const response = await new ClientesApi(
+        configToken
+      ).clientsControllerSoftRemoveClient(client.value?.id as number)
 
       router.push({ name: ROUTER_NAMES.CLIENTS_LIST })
 

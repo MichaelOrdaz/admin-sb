@@ -130,10 +130,14 @@
 
 <script setup lang="ts">
 import { QForm, useMeta, useQuasar } from 'quasar'
-import { CreateUserDto, User, UsersApi } from 'src/api-client'
+import { Configuration, CreateUserDto, User, UsersApi } from 'src/api-client'
 import { ref, watch } from 'vue'
 import { AxiosError } from 'axios'
 import { useRoute } from 'vue-router'
+import { useAuthStore } from 'src/stores/auth-store'
+
+const authStore = useAuthStore()
+const configToken = new Configuration({ accessToken: authStore.token })
 
 const $q = useQuasar()
 const route = useRoute()
@@ -194,9 +198,12 @@ const onSubmit = async () => {
       }
     })
 
-    await new UsersApi().usersControllerUpdateUser(user.value?.id as number, {
-      ...createUserPayload,
-    })
+    await new UsersApi(configToken).usersControllerUpdateUser(
+      user.value?.id as number,
+      {
+        ...createUserPayload,
+      }
+    )
     $q.notify({
       color: 'positive',
       message: 'El usuario fue guardado con exito',
@@ -227,18 +234,18 @@ const onSubmit = async () => {
 // recuperar datos del cliente
 const getUser = async () => {
   loading.value = true
-  const response = await new UsersApi().usersControllerFindOne(
+  const response = await new UsersApi(configToken).usersControllerFindOne(
     +route.params.userId
   )
   user.value = response.data.data?.user as User
   loading.value = false
 
-  createUser.value.name = user.value.name
-  createUser.value.paternalSurname = user.value.paternalSurname
-  createUser.value.maternalSurname = user.value.maternalSurname
-  createUser.value.email = user.value.email
-  createUser.value.phone = user.value.phone
-  createUser.value.role = user.value.role
+  createUser.value.name = user.value.name || ''
+  createUser.value.paternalSurname = user.value.paternalSurname || ''
+  createUser.value.maternalSurname = user.value.maternalSurname || ''
+  createUser.value.email = user.value.email || ''
+  createUser.value.phone = user.value.phone || ''
+  createUser.value.role = user.value.role || ''
 }
 
 getUser()

@@ -423,16 +423,26 @@
 
 <script setup lang="ts">
 import { QForm, useMeta, useQuasar } from 'quasar'
-import { ClientesApi, CreateClientDto, RegimenFiscalApi } from 'src/api-client'
+import {
+  ClientesApi,
+  Configuration,
+  CreateClientDto,
+  RegimenFiscalApi,
+} from 'src/api-client'
 import { ref, watch } from 'vue'
 import { STATES, REGEX } from '../../constants'
 import { AxiosError } from 'axios'
+import { useAuthStore } from 'src/stores/auth-store'
+
+const authStore = useAuthStore()
 
 const $q = useQuasar()
 
 useMeta({
   title: 'Clientes::S&B',
 })
+
+const configToken = new Configuration({ accessToken: authStore.token })
 
 const clientForm = ref<QForm | null>(null)
 
@@ -468,7 +478,9 @@ const regimesOptionsMapped = ref<
 
 // regimes
 const getRegimes = async () => {
-  const response = await new RegimenFiscalApi().regimeControllerFindAllRegimes()
+  const response = await new RegimenFiscalApi(
+    configToken
+  ).regimeControllerFindAllRegimes()
   if (response.data.data?.regimes) {
     regimesOptionsMapped.value = response.data.data?.regimes.map(
       ({ id, name }) => ({
@@ -559,7 +571,9 @@ const onSubmit = async () => {
       }
     })
 
-    const response = await new ClientesApi().clientsControllerCreateClient({
+    const response = await new ClientesApi(
+      configToken
+    ).clientsControllerCreateClient({
       ...createClientRequest,
     })
     $q.notify({
