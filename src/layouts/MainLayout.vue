@@ -90,7 +90,7 @@
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar'
-import { AuthApi, Configuration } from 'src/api-client'
+// import { AuthApi, Configuration } from 'src/api-client'
 import { ROUTER_NAMES } from 'src/router'
 import { useAuthStore } from 'src/stores/auth-store'
 import { computed, ref } from 'vue'
@@ -162,13 +162,13 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
-const getProfile = async () => {
-  await new AuthApi(
-    new Configuration({ accessToken: authStore.token })
-  ).authControllerGetProfile()
-}
+// const getProfile = async () => {
+//   await new AuthApi(
+//     new Configuration({ accessToken: authStore.token })
+//   ).authControllerGetProfile()
+// }
 
-getProfile()
+// getProfile()
 </script>
 
 <style lang="sass" scoped>
