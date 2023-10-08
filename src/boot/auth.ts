@@ -25,27 +25,26 @@ export default boot(async ({ router, store }) => {
     }
   }
 
-  router.beforeEach(async (to, from) => {
+  router.beforeEach(async (to) => {
     if (to.name !== 'login') {
-      console.log('no esta en login')
       if (!(await isAuth())) {
         return { name: ROUTER_NAMES.LOGIN }
       } else {
         return true
       }
-    } else if (to.name === 'login' && from.name === 'login') {
-      console.log('esta en login')
-      console.log('to', to.name)
-      console.log('from', from.name)
-      if (await isAuth()) {
-        console.log('redirigiendo a home')
-        return { name: ROUTER_NAMES.HOME }
-      } else {
-        console.log(
-          'es false el auth entonces lo returno true y deberia quedarse aqui'
-        )
-        return true
-      }
     }
+    return
+    // else if (to.name === 'login' && from.name === undefined) {
+    //   console.log('esta en login')
+    //   if (await isAuth()) {
+    //     console.log('redirigiendo a home')
+    //     return { name: ROUTER_NAMES.HOME }
+    //   } else {
+    //     console.log(
+    //       'es false el auth entonces lo returno true y deberia quedarse aqui'
+    //     )
+    //     return true
+    //   }
+    // }
   })
 })
