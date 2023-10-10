@@ -1474,14 +1474,16 @@ export const ClientesApiAxiosParamCreator = function (
       }
     },
     /**
-     * obtener todos los datos del un cliente en particular
+     * obtener todos los datos del un cliente en particular, agrego una bandera query para obtener un cliente sofdelete
      * @summary
      * @param {number} clientId
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     clientsControllerFindOneClient: async (
       clientId: number,
+      inactive?: 0 | 1,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'clientId' is not null or undefined
@@ -1508,6 +1510,10 @@ export const ClientesApiAxiosParamCreator = function (
       // authentication bearer required
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      if (inactive !== undefined) {
+        localVarQueryParameter['inactive'] = inactive
+      }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
@@ -1828,14 +1834,16 @@ export const ClientesApiFp = function (configuration?: Configuration) {
       )
     },
     /**
-     * obtener todos los datos del un cliente en particular
+     * obtener todos los datos del un cliente en particular, agrego una bandera query para obtener un cliente sofdelete
      * @summary
      * @param {number} clientId
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async clientsControllerFindOneClient(
       clientId: number,
+      inactive?: 0 | 1,
       options?: AxiosRequestConfig
     ): Promise<
       (
@@ -1846,6 +1854,7 @@ export const ClientesApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.clientsControllerFindOneClient(
           clientId,
+          inactive,
           options
         )
       return createRequestFunction(
@@ -2018,18 +2027,20 @@ export const ClientesApiFactory = function (
         .then((request) => request(axios, basePath))
     },
     /**
-     * obtener todos los datos del un cliente en particular
+     * obtener todos los datos del un cliente en particular, agrego una bandera query para obtener un cliente sofdelete
      * @summary
      * @param {number} clientId
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     clientsControllerFindOneClient(
       clientId: number,
+      inactive?: 0 | 1,
       options?: any
     ): AxiosPromise<ClientsControllerCreateClient201Response> {
       return localVarFp
-        .clientsControllerFindOneClient(clientId, options)
+        .clientsControllerFindOneClient(clientId, inactive, options)
         .then((request) => request(axios, basePath))
     },
     /**
@@ -2145,19 +2156,21 @@ export class ClientesApi extends BaseAPI {
   }
 
   /**
-   * obtener todos los datos del un cliente en particular
+   * obtener todos los datos del un cliente en particular, agrego una bandera query para obtener un cliente sofdelete
    * @summary
    * @param {number} clientId
+   * @param {0 | 1} [inactive]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ClientesApi
    */
   public clientsControllerFindOneClient(
     clientId: number,
+    inactive?: 0 | 1,
     options?: AxiosRequestConfig
   ) {
     return ClientesApiFp(this.configuration)
-      .clientsControllerFindOneClient(clientId, options)
+      .clientsControllerFindOneClient(clientId, inactive, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
@@ -2595,11 +2608,13 @@ export const UsersApiAxiosParamCreator = function (
      * e¿obtener todos los datos de un usuario
      * @summary
      * @param {number} userId
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     usersControllerFindOne: async (
       userId: number,
+      inactive?: 0 | 1,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'userId' is not null or undefined
@@ -2626,6 +2641,10 @@ export const UsersApiAxiosParamCreator = function (
       // authentication bearer required
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      if (inactive !== undefined) {
+        localVarQueryParameter['inactive'] = inactive
+      }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
@@ -2977,11 +2996,13 @@ export const UsersApiFp = function (configuration?: Configuration) {
      * e¿obtener todos los datos de un usuario
      * @summary
      * @param {number} userId
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async usersControllerFindOne(
       userId: number,
+      inactive?: 0 | 1,
       options?: AxiosRequestConfig
     ): Promise<
       (
@@ -2990,7 +3011,11 @@ export const UsersApiFp = function (configuration?: Configuration) {
       ) => AxiosPromise<UsersControllerFindOne200Response>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.usersControllerFindOne(userId, options)
+        await localVarAxiosParamCreator.usersControllerFindOne(
+          userId,
+          inactive,
+          options
+        )
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -3186,15 +3211,17 @@ export const UsersApiFactory = function (
      * e¿obtener todos los datos de un usuario
      * @summary
      * @param {number} userId
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     usersControllerFindOne(
       userId: number,
+      inactive?: 0 | 1,
       options?: any
     ): AxiosPromise<UsersControllerFindOne200Response> {
       return localVarFp
-        .usersControllerFindOne(userId, options)
+        .usersControllerFindOne(userId, inactive, options)
         .then((request) => request(axios, basePath))
     },
     /**
@@ -3319,13 +3346,18 @@ export class UsersApi extends BaseAPI {
    * e¿obtener todos los datos de un usuario
    * @summary
    * @param {number} userId
+   * @param {0 | 1} [inactive]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UsersApi
    */
-  public usersControllerFindOne(userId: number, options?: AxiosRequestConfig) {
+  public usersControllerFindOne(
+    userId: number,
+    inactive?: 0 | 1,
+    options?: AxiosRequestConfig
+  ) {
     return UsersApiFp(this.configuration)
-      .usersControllerFindOne(userId, options)
+      .usersControllerFindOne(userId, inactive, options)
       .then((request) => request(this.axios, this.basePath))
   }
 

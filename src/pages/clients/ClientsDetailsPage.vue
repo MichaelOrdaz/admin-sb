@@ -17,25 +17,58 @@
             <h5 class="q-my-none">Información del cliente</h5>
           </q-card-section>
           <q-card-actions align="right">
-            <q-btn
-              color="primary"
-              icon="edit"
-              label="editar"
-              :to="{
-                name: ROUTER_NAMES.CLIENTS_EDIT,
-                params: { clientId: client?.id },
-              }"
-            />
-            <q-btn
-              color="yellow"
-              text-color="black"
-              icon="remove_circle"
-              label="desactivar"
-              @click="confirm = true"
-            />
+            <template v-if="$route.query.active === '1'">
+              <q-btn
+                color="primary"
+                icon="edit"
+                label="editar"
+                :to="{
+                  name: ROUTER_NAMES.CLIENTS_EDIT,
+                  params: { clientId: client?.id },
+                }"
+              />
+              <q-btn
+                color="yellow"
+                text-color="black"
+                icon="remove_circle"
+                label="desactivar"
+                @click="showDialogActionInactive"
+              />
+            </template>
+            <template v-else>
+              <q-btn
+                color="primary"
+                icon="settings_backup_restore"
+                label="reactivar"
+                @click="showDialogActionRestore"
+              />
+              <q-btn
+                color="negative"
+                icon="delete"
+                label="eliminar"
+                @click="showDialogActionDelete"
+              />
+            </template>
           </q-card-actions>
 
           <q-card-section v-if="client">
+            <template v-if="$route.query.active === '0'">
+              <div
+                class="text-weight-bold q-mb-md bg-yellow-6 q-pa-xs rounded-borders text-dark"
+              >
+                MOTIVO DE BAJA
+              </div>
+              <div class="row q-mt-sm q-mb-lg">
+                <div class="col-12">
+                  Fecha de baja
+                  {{ dayjs(client.deletedAt).format('LLLL') }}
+                </div>
+                <div class="col-12">
+                  {{ client.reasonToInactive }}
+                </div>
+              </div>
+            </template>
+
             <div
               class="text-weight-bold q-mb-md bg-blue-grey-6 q-pa-xs rounded-borders"
             >
@@ -157,7 +190,7 @@
           </q-inner-loading>
         </q-card>
       </div>
-      <div class="col-sm-3 q-px-lg">
+      <div class="col-sm-3 q-px-lg" v-if="$route.query.active === '1'">
         <q-card>
           <q-list bordered separator>
             <q-item clickable v-ripple>
@@ -185,15 +218,19 @@
 
     <q-dialog v-model="confirm" persistent>
       <q-card>
-        <q-card-section class="row items-start">
-          <q-avatar icon="remove_circle" color="warning" text-color="white" />
+        <q-card-section class="items-start" v-if="client">
+          <q-avatar
+            :icon="messageDialog.icon"
+            :color="messageDialog.colorIcon"
+            text-color="white"
+          />
           <div class="q-ml-sm" v-if="client">
-            ¿Deseas desactivar al cliente {{ client.name }}
-            {{ client?.paternalSurname }} del sistema?
+            {{ messageDialog.message }}
 
             <q-input
+              v-show="messageDialog.action === 'inactive'"
               class="q-mt-md"
-              v-model="inputReasonInactive"
+              v-model="messageDialog.inputExtra"
               filled
               type="textarea"
               label="Motivo por el cual se desactivar al cliente *"
@@ -207,11 +244,27 @@
         <q-card-actions align="right">
           <q-btn
             flat
-            label="Desactivar"
-            color="warning"
+            :label="messageDialog.labelBtnConfirm"
+            :color="messageDialog.colorIcon"
             v-close-popup
-            :disable="!isValidReason"
-            @click="inactiveClient"
+            :disable="
+              messageDialog.action === 'inactive' &&
+              messageDialog.inputExtra.length === 0
+            "
+            @click="
+              () => {
+                if (messageDialog.action === 'inactive') {
+                  if (messageDialog.inputExtra === '') {
+                    return
+                  }
+                  inactiveClient()
+                } else if (messageDialog.action === 'restore') {
+                  restoreClient()
+                } else if (messageDialog.action === 'delete') {
+                  deleteClient()
+                }
+              }
+            "
           />
           <q-btn flat label="cancelar" color="primary" v-close-popup />
         </q-card-actions>
@@ -222,12 +275,19 @@
 
 <script setup lang="ts">
 import { AxiosError } from 'axios'
+
 import { useMeta, useQuasar } from 'quasar'
 import { Client, ClientesApi, Configuration } from 'src/api-client'
 import { ROUTER_NAMES } from 'src/router'
 import { useAuthStore } from 'src/stores/auth-store'
-import { computed, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+
+import dayjs from 'dayjs'
+import localizedFormat from 'dayjs/plugin/localizedFormat'
+import 'dayjs/locale/es'
+dayjs.locale('es')
+dayjs.extend(localizedFormat)
 
 const route = useRoute()
 const router = useRouter()
@@ -245,15 +305,27 @@ const confirm = ref(false)
 const loading = ref(false)
 const client = ref<Client | null>(null)
 
-const inputReasonInactive = ref('')
-const isValidReason = computed(() => inputReasonInactive.value.length > 0)
+const messageDialog = reactive({
+  action: '',
+  message: '',
+  icon: '',
+  colorIcon: '',
+  labelBtnConfirm: '',
+  inputExtra: '',
+})
+
+const isValidReason = computed(() => messageDialog.inputExtra.length > 0)
 
 const getClient = async () => {
   loading.value = true
   try {
+    const active = route.query?.active as string
     const response = await new ClientesApi(
       configToken
-    ).clientsControllerFindOneClient(+route.params.clientId)
+    ).clientsControllerFindOneClient(
+      +route.params.clientId,
+      +active === 0 ? 1 : (0 as 0 | 1)
+    )
     client.value = response.data.data?.client as Client
     loading.value = false
   } catch (e) {
@@ -283,22 +355,119 @@ const inactiveClient = async () => {
       await new ClientesApi(configToken).clientsControllerSoftRemoveClient(
         client.value?.id as number,
         {
-          reason: inputReasonInactive.value,
+          reason: messageDialog.inputExtra,
         }
+      )
+
+      messageDialog.inputExtra = ''
+
+      router.push({ name: ROUTER_NAMES.CLIENTS_LIST })
+
+      $q.notify({
+        color: 'primary',
+        message: 'El cliente ha sido desactivado',
+      })
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        $q.notify({
+          color: 'negative',
+          message: `Error. ${e.response?.data.message}`,
+        })
+      } else {
+        $q.notify({
+          color: 'negative',
+          message: 'Error desconocido reintente',
+        })
+      }
+    }
+  }
+}
+
+const restoreClient = async () => {
+  if (client.value) {
+    try {
+      await new ClientesApi(configToken).clientsControllerRestoreClient(
+        client.value?.id as number
+      )
+
+      router.push({ name: ROUTER_NAMES.CLIENTS_LIST })
+
+      $q.notify({
+        color: 'positive',
+        message: 'El cliente ha sido reactivado',
+      })
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        $q.notify({
+          color: 'negative',
+          message: `Error. ${e.response?.data.message}`,
+        })
+      } else {
+        $q.notify({
+          color: 'negative',
+          message: 'Error desconocido reintente',
+        })
+      }
+    }
+  }
+}
+
+const deleteClient = async () => {
+  if (client.value) {
+    try {
+      await new ClientesApi(configToken).clientsControllerForceRemoveClient(
+        client.value?.id as number
       )
 
       router.push({ name: ROUTER_NAMES.CLIENTS_LIST })
 
       $q.notify({
         color: 'primary',
-        message: 'El cliente fue desactivado',
+        message: 'El cliente ha sido eliminado',
       })
     } catch (e) {
-      $q.notify({
-        color: 'warning',
-        message: 'Ocurrio un error, reintente',
-      })
+      if (e instanceof AxiosError) {
+        $q.notify({
+          color: 'negative',
+          message: `Error. ${e.response?.data.message}`,
+        })
+      } else {
+        $q.notify({
+          color: 'negative',
+          message: 'Error desconocido reintente',
+        })
+      }
     }
   }
+}
+
+const showDialogActionInactive = () => {
+  if (!client.value) return
+  confirm.value = true
+  messageDialog.action = 'inactive'
+  messageDialog.message = `¿Deseas desactivar al cliente ${client.value.name} ${client.value.paternalSurname} de la lista?`
+  messageDialog.icon = 'remove_circle'
+  messageDialog.colorIcon = 'warning'
+  messageDialog.labelBtnConfirm = 'Desactivar'
+}
+
+const showDialogActionDelete = () => {
+  if (!client.value) return
+  confirm.value = true
+  messageDialog.action = 'delete'
+  messageDialog.message = `¿Deseas eliminar al cliente ${client.value.name} ${client.value.paternalSurname} del sistema? Esta acción es irreversible`
+  messageDialog.icon = 'delete'
+  messageDialog.colorIcon = 'negative'
+  messageDialog.labelBtnConfirm = 'Eliminar'
+}
+
+const showDialogActionRestore = () => {
+  if (!client.value) return
+  confirm.value = true
+  messageDialog.action = 'restore'
+  messageDialog.message = `¿Deseas reactivar al cliente ${client.value.name} ${client.value.paternalSurname}?`
+  messageDialog.icon = 'settings_backup_restore'
+  messageDialog.colorIcon = 'positive'
+  messageDialog.labelBtnConfirm = 'Restaurar'
 }
 </script>

@@ -34,6 +34,7 @@
                   :to="{
                     name: ROUTER_NAMES.CLIENTS_DETAILS,
                     params: { clientId: props.row.id },
+                    query: { active: tab === 'active' ? 1 : 0 },
                   }"
                   title="detalles de cliente"
                 />
@@ -154,6 +155,7 @@
 </template>
 
 <script setup lang="ts">
+import { AxiosError } from 'axios'
 import { QTableProps, useMeta, useQuasar } from 'quasar'
 import { Client, ClientesApi, Configuration } from 'src/api-client'
 import { ROUTER_NAMES } from 'src/router'
@@ -247,51 +249,93 @@ const columns: QTableProps['columns'] = [
 
 const inactiveClient = async () => {
   if (selected.value) {
-    await new ClientesApi(configToken).clientsControllerSoftRemoveClient(
-      selected.value?.id as number,
-      {
-        reason: messageDialog.inputExtra,
+    try {
+      await new ClientesApi(configToken).clientsControllerSoftRemoveClient(
+        selected.value?.id as number,
+        {
+          reason: messageDialog.inputExtra,
+        }
+      )
+
+      messageDialog.inputExtra = ''
+
+      getClients()
+
+      $q.notify({
+        color: 'primary',
+        message: 'El cliente ha sido desactivado',
+      })
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        $q.notify({
+          color: 'negative',
+          message: `Error. ${e.response?.data.message}`,
+        })
+      } else {
+        $q.notify({
+          color: 'negative',
+          message: 'Error desconocido reintente',
+        })
       }
-    )
-
-    messageDialog.inputExtra = ''
-
-    getClients()
-
-    $q.notify({
-      color: 'primary',
-      message: 'El cliente ha sido desactivado',
-    })
+    }
   }
 }
 
 const restoreClient = async () => {
   if (selected.value) {
-    await new ClientesApi(configToken).clientsControllerRestoreClient(
-      selected.value?.id as number
-    )
+    try {
+      await new ClientesApi(configToken).clientsControllerRestoreClient(
+        selected.value?.id as number
+      )
 
-    getClients()
+      getClients()
 
-    $q.notify({
-      color: 'positive',
-      message: 'El cliente ha sido reactivado',
-    })
+      $q.notify({
+        color: 'positive',
+        message: 'El cliente ha sido reactivado',
+      })
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        $q.notify({
+          color: 'negative',
+          message: `Error. ${e.response?.data.message}`,
+        })
+      } else {
+        $q.notify({
+          color: 'negative',
+          message: 'Error desconocido reintente',
+        })
+      }
+    }
   }
 }
 
 const deleteClient = async () => {
   if (selected.value) {
-    await new ClientesApi(configToken).clientsControllerForceRemoveClient(
-      selected.value?.id as number
-    )
+    try {
+      await new ClientesApi(configToken).clientsControllerForceRemoveClient(
+        selected.value?.id as number
+      )
 
-    getClients()
+      getClients()
 
-    $q.notify({
-      color: 'primary',
-      message: 'El cliente ha sido eliminado',
-    })
+      $q.notify({
+        color: 'primary',
+        message: 'El cliente ha sido eliminado',
+      })
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        $q.notify({
+          color: 'negative',
+          message: `Error. ${e.response?.data.message}`,
+        })
+      } else {
+        $q.notify({
+          color: 'negative',
+          message: 'Error desconocido reintente',
+        })
+      }
+    }
   }
 }
 
