@@ -236,6 +236,18 @@ export interface Client {
   legalRepresentativeCURP?: string
   /**
    *
+   * @type {string}
+   * @memberof Client
+   */
+  observations: string
+  /**
+   *
+   * @type {string}
+   * @memberof Client
+   */
+  reasonToInactive: string
+  /**
+   *
    * @type {Array<Activity>}
    * @memberof Client
    */
@@ -443,19 +455,25 @@ export interface CreateClientDto {
    * @type {string}
    * @memberof CreateClientDto
    */
-  legalRepresentativeFullname: string
+  legalRepresentativeFullname?: string
   /**
    *
    * @type {string}
    * @memberof CreateClientDto
    */
-  legalRepresentativeRFC: string
+  legalRepresentativeRFC?: string
   /**
    *
    * @type {string}
    * @memberof CreateClientDto
    */
-  legalRepresentativeCURP: string
+  legalRepresentativeCURP?: string
+  /**
+   *
+   * @type {string}
+   * @memberof CreateClientDto
+   */
+  observations?: string
   /**
    *
    * @type {Array<number>}
@@ -631,6 +649,19 @@ export interface RegimeControllerFindOneRegime200ResponseData {
    * @memberof RegimeControllerFindOneRegime200ResponseData
    */
   regime?: Regime
+}
+/**
+ *
+ * @export
+ * @interface SoftDeleteClientDto
+ */
+export interface SoftDeleteClientDto {
+  /**
+   *
+   * @type {string}
+   * @memberof SoftDeleteClientDto
+   */
+  reason: string
 }
 /**
  *
@@ -1600,11 +1631,13 @@ export const ClientesApiAxiosParamCreator = function (
      * Elimina un cliente por id, se conservan sus datos (borrado logico)
      * @summary
      * @param {number} clientId
+     * @param {SoftDeleteClientDto} softDeleteClientDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     clientsControllerSoftRemoveClient: async (
       clientId: number,
+      softDeleteClientDto: SoftDeleteClientDto,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'clientId' is not null or undefined
@@ -1612,6 +1645,12 @@ export const ClientesApiAxiosParamCreator = function (
         'clientsControllerSoftRemoveClient',
         'clientId',
         clientId
+      )
+      // verify required parameter 'softDeleteClientDto' is not null or undefined
+      assertParamExists(
+        'clientsControllerSoftRemoveClient',
+        'softDeleteClientDto',
+        softDeleteClientDto
       )
       const localVarPath = `/clients/{clientId}`.replace(
         `{${'clientId'}}`,
@@ -1636,6 +1675,8 @@ export const ClientesApiAxiosParamCreator = function (
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+      localVarHeaderParameter['Content-Type'] = 'application/json'
+
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
         baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -1644,6 +1685,11 @@ export const ClientesApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       }
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        softDeleteClientDto,
+        localVarRequestOptions,
+        configuration
+      )
 
       return {
         url: toPathString(localVarUrlObj),
@@ -1869,11 +1915,13 @@ export const ClientesApiFp = function (configuration?: Configuration) {
      * Elimina un cliente por id, se conservan sus datos (borrado logico)
      * @summary
      * @param {number} clientId
+     * @param {SoftDeleteClientDto} softDeleteClientDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async clientsControllerSoftRemoveClient(
       clientId: number,
+      softDeleteClientDto: SoftDeleteClientDto,
       options?: AxiosRequestConfig
     ): Promise<
       (
@@ -1884,6 +1932,7 @@ export const ClientesApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.clientsControllerSoftRemoveClient(
           clientId,
+          softDeleteClientDto,
           options
         )
       return createRequestFunction(
@@ -2017,15 +2066,21 @@ export const ClientesApiFactory = function (
      * Elimina un cliente por id, se conservan sus datos (borrado logico)
      * @summary
      * @param {number} clientId
+     * @param {SoftDeleteClientDto} softDeleteClientDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     clientsControllerSoftRemoveClient(
       clientId: number,
+      softDeleteClientDto: SoftDeleteClientDto,
       options?: any
     ): AxiosPromise<ClientsControllerCreateClient201Response> {
       return localVarFp
-        .clientsControllerSoftRemoveClient(clientId, options)
+        .clientsControllerSoftRemoveClient(
+          clientId,
+          softDeleteClientDto,
+          options
+        )
         .then((request) => request(axios, basePath))
     },
     /**
@@ -2144,16 +2199,18 @@ export class ClientesApi extends BaseAPI {
    * Elimina un cliente por id, se conservan sus datos (borrado logico)
    * @summary
    * @param {number} clientId
+   * @param {SoftDeleteClientDto} softDeleteClientDto
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ClientesApi
    */
   public clientsControllerSoftRemoveClient(
     clientId: number,
+    softDeleteClientDto: SoftDeleteClientDto,
     options?: AxiosRequestConfig
   ) {
     return ClientesApiFp(this.configuration)
-      .clientsControllerSoftRemoveClient(clientId, options)
+      .clientsControllerSoftRemoveClient(clientId, softDeleteClientDto, options)
       .then((request) => request(this.axios, this.basePath))
   }
 

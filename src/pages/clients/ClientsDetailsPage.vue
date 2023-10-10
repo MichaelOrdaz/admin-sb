@@ -142,6 +142,14 @@
               <div class="col-2">CURP representante legal:</div>
               <div class="col">{{ client.legalRepresentativeCURP || '' }}</div>
             </div>
+            <div
+              class="text-weight-bold q-mb-md bg-blue-grey-6 q-pa-xs rounded-borders q-mt-lg"
+            >
+              Observaciones
+            </div>
+            <div class="row q-my-sm">
+              <div class="col">{{ client.observations || '' }}</div>
+            </div>
           </q-card-section>
 
           <q-inner-loading :showing="loading">
@@ -177,21 +185,33 @@
 
     <q-dialog v-model="confirm" persistent>
       <q-card>
-        <q-card-section class="row items-center">
-          <q-avatar icon="remove_circle" color="negative" text-color="white" />
-          <span class="q-ml-sm" v-if="client"
-            >Deseas desactivar al cliente {{ client.name }}
-            {{ client?.paternalSurname }}.</span
-          >
+        <q-card-section class="row items-start">
+          <q-avatar icon="remove_circle" color="warning" text-color="white" />
+          <div class="q-ml-sm" v-if="client">
+            ¿Deseas desactivar al cliente {{ client.name }}
+            {{ client?.paternalSurname }} del sistema?
+
+            <q-input
+              class="q-mt-md"
+              v-model="inputReasonInactive"
+              filled
+              type="textarea"
+              label="Motivo por el cual se desactivar al cliente *"
+              color="white"
+              error-message="El motivo es requerido"
+              :error="!isValidReason"
+            />
+          </div>
         </q-card-section>
 
         <q-card-actions align="right">
           <q-btn
             flat
             label="Desactivar"
-            color="negative"
+            color="warning"
             v-close-popup
-            @click="deleteClient"
+            :disable="!isValidReason"
+            @click="inactiveClient"
           />
           <q-btn flat label="cancelar" color="primary" v-close-popup />
         </q-card-actions>
@@ -201,11 +221,12 @@
 </template>
 
 <script setup lang="ts">
+import { AxiosError } from 'axios'
 import { useMeta, useQuasar } from 'quasar'
 import { Client, ClientesApi, Configuration } from 'src/api-client'
 import { ROUTER_NAMES } from 'src/router'
 import { useAuthStore } from 'src/stores/auth-store'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
@@ -224,13 +245,27 @@ const confirm = ref(false)
 const loading = ref(false)
 const client = ref<Client | null>(null)
 
+const inputReasonInactive = ref('')
+const isValidReason = computed(() => inputReasonInactive.value.length > 0)
+
 const getClient = async () => {
   loading.value = true
-  const response = await new ClientesApi(
-    configToken
-  ).clientsControllerFindOneClient(+route.params.clientId)
-  client.value = response.data.data?.client as Client
-  loading.value = false
+  try {
+    const response = await new ClientesApi(
+      configToken
+    ).clientsControllerFindOneClient(+route.params.clientId)
+    client.value = response.data.data?.client as Client
+    loading.value = false
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      loading.value = false
+      router.back()
+      $q.notify({
+        color: 'negative',
+        message: e.response?.data.message,
+      })
+    }
+  }
 }
 
 getClient()
@@ -242,12 +277,15 @@ watch(
   }
 )
 
-const deleteClient = async () => {
+const inactiveClient = async () => {
   if (client.value) {
     try {
-      const response = await new ClientesApi(
-        configToken
-      ).clientsControllerSoftRemoveClient(client.value?.id as number)
+      await new ClientesApi(configToken).clientsControllerSoftRemoveClient(
+        client.value?.id as number,
+        {
+          reason: inputReasonInactive.value,
+        }
+      )
 
       router.push({ name: ROUTER_NAMES.CLIENTS_LIST })
 

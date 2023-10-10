@@ -18,7 +18,6 @@ export default boot(async ({ router, store }) => {
           Authorization: `Bearer ${token}`,
         },
       })
-      console.log(response)
       return true
     } catch {
       return false
