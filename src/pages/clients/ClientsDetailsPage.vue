@@ -58,7 +58,9 @@
               >
                 MOTIVO DE BAJA
               </div>
-              <div class="row q-mt-sm q-mb-lg">
+              <div
+                class="row q-mt-sm q-mb-lg bg-yellow-5 rounded-borders q-pa-sm text-dark"
+              >
                 <div class="col-12">
                   Fecha de baja
                   {{ dayjs(client.deletedAt).format('LLLL') }}

@@ -11,12 +11,12 @@
           <q-card-section>Lista de clientes</q-card-section>
 
           <q-tabs v-model="tab" no-caps align="left" inline-label>
-            <q-tab name="active" label="Activos" icon="people" />
-            <q-tab name="inactive" label="Inactivos" icon="group_remove" />
+            <q-tab name="active" label="Activos" icon="business" />
+            <q-tab name="inactive" label="Inactivos" icon="domain_disabled" />
           </q-tabs>
 
           <q-table
-            row-key="name"
+            row-key="id"
             :rows="clients"
             :columns="columns"
             :loading="loading"
