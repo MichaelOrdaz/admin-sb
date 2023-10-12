@@ -17,34 +17,50 @@
             <h5 class="q-my-none">Información del usuario</h5>
           </q-card-section>
           <q-card-actions align="right">
-            <q-btn
-              color="primary"
-              icon="edit"
-              label="editar"
-              :to="{
-                name: ROUTER_NAMES.USERS_EDIT,
-                params: { userId: user?.id },
-              }"
-            />
-            <q-btn
-              color="primary"
-              icon="key"
-              label="Renovar contraseña"
-              @click="confirmRenewPassword = true"
-            />
-            <q-btn
-              color="yellow"
-              text-color="black"
-              icon="remove_circle"
-              label="desactivar"
-              @click="confirm = true"
-              :disable="authStore.user?.id === user?.id"
-              :title="
-                authStore.user?.id === user?.id
-                  ? 'No puedes desactivar a tu mismo usuario'
-                  : ''
-              "
-            />
+            <template v-if="$route.query.active === '1'">
+              <q-btn
+                color="primary"
+                icon="edit"
+                label="editar"
+                :to="{
+                  name: ROUTER_NAMES.USERS_EDIT,
+                  params: { userId: user?.id },
+                }"
+              />
+              <q-btn
+                color="primary"
+                icon="key"
+                label="Renovar contraseña"
+                @click="confirmRenewPassword = true"
+              />
+              <q-btn
+                color="yellow"
+                text-color="black"
+                icon="remove_circle"
+                label="desactivar"
+                @click="showDialogActionInactive"
+                :disable="authStore.user?.id === user?.id"
+                :title="
+                  authStore.user?.id === user?.id
+                    ? 'No puedes desactivar a tu mismo usuario'
+                    : ''
+                "
+              />
+            </template>
+            <template v-else>
+              <q-btn
+                color="primary"
+                icon="settings_backup_restore"
+                label="reactivar"
+                @click="showDialogActionRestore"
+              />
+              <q-btn
+                color="negative"
+                icon="delete"
+                label="eliminar"
+                @click="showDialogActionDelete"
+              />
+            </template>
           </q-card-actions>
 
           <q-card-section v-if="user">
@@ -80,21 +96,34 @@
 
     <q-dialog v-model="confirm" persistent>
       <q-card>
-        <q-card-section class="row items-center">
-          <q-avatar icon="remove_circle" color="negative" text-color="white" />
-          <span class="q-ml-sm" v-if="user"
-            >Deseas desactivar al cliente {{ user.name }}
-            {{ user?.paternalSurname }}.</span
-          >
+        <q-card-section class="items-start" v-if="user">
+          <q-avatar
+            :icon="messageDialog.icon"
+            :color="messageDialog.colorIcon"
+            text-color="white"
+          />
+          <div class="q-ml-sm" v-if="user">
+            {{ messageDialog.message }}
+          </div>
         </q-card-section>
 
         <q-card-actions align="right">
           <q-btn
             flat
-            label="Desactivar"
-            color="negative"
+            :label="messageDialog.labelBtnConfirm"
+            :color="messageDialog.colorIcon"
             v-close-popup
-            @click="deleteUser"
+            @click="
+              () => {
+                if (messageDialog.action === 'inactive') {
+                  inactiveClient()
+                } else if (messageDialog.action === 'restore') {
+                  restoreClient()
+                } else if (messageDialog.action === 'delete') {
+                  deleteClient()
+                }
+              }
+            "
           />
           <q-btn flat label="cancelar" color="primary" v-close-popup />
         </q-card-actions>
@@ -145,11 +174,12 @@
 </template>
 
 <script setup lang="ts">
+import { AxiosError } from 'axios'
 import { useMeta, useQuasar } from 'quasar'
 import { Configuration, User, UsersApi } from 'src/api-client'
 import { ROUTER_NAMES } from 'src/router'
 import { useAuthStore } from 'src/stores/auth-store'
-import { ref, watch } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
@@ -171,13 +201,34 @@ const recoverPass = ref<string | null>(null)
 const loading = ref(false)
 const user = ref<User | null>(null)
 
+const messageDialog = reactive({
+  action: '',
+  message: '',
+  icon: '',
+  colorIcon: '',
+  labelBtnConfirm: '',
+})
+
 const getUser = async () => {
   loading.value = true
-  const response = await new UsersApi(configToken).usersControllerFindOne(
-    +route.params.userId
-  )
-  user.value = response.data.data?.user as User
-  loading.value = false
+  try {
+    const active = route.query?.active as string
+    const response = await new UsersApi(configToken).usersControllerFindOne(
+      +route.params.userId,
+      +active === 0 ? 1 : (0 as 0 | 1)
+    )
+    user.value = response.data.data?.user as User
+    loading.value = false
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      loading.value = false
+      router.back()
+      $q.notify({
+        color: 'negative',
+        message: e.response?.data.message,
+      })
+    }
+  }
 }
 
 getUser()
@@ -189,7 +240,7 @@ watch(
   }
 )
 
-const deleteUser = async () => {
+const inactiveClient = async () => {
   if (user.value) {
     try {
       await new UsersApi(configToken).usersControllerSoftRemoveUser(
@@ -200,13 +251,78 @@ const deleteUser = async () => {
 
       $q.notify({
         color: 'primary',
-        message: 'El usuario fue desactivado correctamente',
+        message: 'El usuario ha sido desactivado y no podra acceder al sistema',
       })
     } catch (e) {
+      if (e instanceof AxiosError) {
+        $q.notify({
+          color: 'negative',
+          message: `Error. ${e.response?.data.message}`,
+        })
+      } else {
+        $q.notify({
+          color: 'negative',
+          message: 'Error desconocido reintente',
+        })
+      }
+    }
+  }
+}
+
+const restoreClient = async () => {
+  if (user.value) {
+    try {
+      await new UsersApi(configToken).usersControllerRestoreUser(
+        user.value?.id as number
+      )
+
+      router.push({ name: ROUTER_NAMES.USERS_LIST })
+
       $q.notify({
-        color: 'warning',
-        message: 'Ocurrio un error, reintente',
+        color: 'positive',
+        message: 'El usuario ha sido reactivado',
       })
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        $q.notify({
+          color: 'negative',
+          message: `Error. ${e.response?.data.message}`,
+        })
+      } else {
+        $q.notify({
+          color: 'negative',
+          message: 'Error desconocido reintente',
+        })
+      }
+    }
+  }
+}
+
+const deleteClient = async () => {
+  if (user.value) {
+    try {
+      await new UsersApi(configToken).usersControllerForceRemoveUser(
+        user.value?.id as number
+      )
+
+      router.push({ name: ROUTER_NAMES.USERS_LIST })
+
+      $q.notify({
+        color: 'primary',
+        message: 'El usuario ha sido eliminado',
+      })
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        $q.notify({
+          color: 'negative',
+          message: `Error. ${e.response?.data.message}`,
+        })
+      } else {
+        $q.notify({
+          color: 'negative',
+          message: 'Error desconocido reintente',
+        })
+      }
     }
   }
 }
@@ -226,5 +342,35 @@ const refreshPassword = async () => {
       })
     }
   }
+}
+
+const showDialogActionInactive = () => {
+  if (!user.value) return
+  confirm.value = true
+  messageDialog.action = 'inactive'
+  messageDialog.message = `¿Deseas desactivar al usuario ${user.value.name} ${user.value.paternalSurname} de la lista?`
+  messageDialog.icon = 'remove_circle'
+  messageDialog.colorIcon = 'warning'
+  messageDialog.labelBtnConfirm = 'Desactivar'
+}
+
+const showDialogActionDelete = () => {
+  if (!user.value) return
+  confirm.value = true
+  messageDialog.action = 'delete'
+  messageDialog.message = `¿Deseas eliminar al usuario ${user.value.name} ${user.value.paternalSurname} del sistema? Esta acción es irreversible`
+  messageDialog.icon = 'delete'
+  messageDialog.colorIcon = 'negative'
+  messageDialog.labelBtnConfirm = 'Eliminar'
+}
+
+const showDialogActionRestore = () => {
+  if (!user.value) return
+  confirm.value = true
+  messageDialog.action = 'restore'
+  messageDialog.message = `¿Deseas reactivar al usuario ${user.value.name} ${user.value.paternalSurname}?`
+  messageDialog.icon = 'settings_backup_restore'
+  messageDialog.colorIcon = 'positive'
+  messageDialog.labelBtnConfirm = 'Restaurar'
 }
 </script>

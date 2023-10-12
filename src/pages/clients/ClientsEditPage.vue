@@ -395,6 +395,19 @@
                 </div>
               </div>
 
+              <div class="row">
+                <div class="col">
+                  <q-input
+                    class="q-mt-md"
+                    v-model="createClient.observations"
+                    filled
+                    type="textarea"
+                    label="Observaciones al cliente"
+                    color="white"
+                  />
+                </div>
+              </div>
+
               <div class="row q-my-sm">
                 <div class="col-12">
                   <q-btn
@@ -473,6 +486,7 @@ const createClient = ref<Partial<CreateClientDto>>({
   legalRepresentativeFullname: '',
   legalRepresentativeRFC: '',
   legalRepresentativeCURP: '',
+  observations: '',
 })
 
 const activityItemBase: {
@@ -528,6 +542,7 @@ const resetForm = () => {
   createClient.value.legalRepresentativeFullname = ''
   createClient.value.legalRepresentativeRFC = ''
   createClient.value.legalRepresentativeCURP = ''
+  createClient.value.observations = ''
 
   regimesClient.value = [null]
   activitiesClient.value = [{ ...activityItemBase }]
@@ -568,6 +583,7 @@ const onSubmit = async () => {
     legalRepresentativeRFC: createClient.value.legalRepresentativeRFC as string,
     legalRepresentativeCURP: createClient.value
       .legalRepresentativeCURP as string,
+    observations: createClient.value.observations,
     regimes: regimesClient.value.map((i) => +i!),
     activities: activitiesClient.value.map((i) => ({
       name: i.activity!,
@@ -585,19 +601,22 @@ const onSubmit = async () => {
       }
     })
 
-    const response = await new ClientesApi(
-      configToken
-    ).clientsControllerUpdateClient(client.value?.id as number, {
-      ...createClientRequest,
-    })
+    await new ClientesApi(configToken).clientsControllerUpdateClient(
+      client.value?.id as number,
+      {
+        ...createClientRequest,
+      }
+    )
     $q.notify({
       color: 'positive',
       message: 'El Cliente fue guardado con exito',
     })
 
     resetForm()
-    clientForm.value!.reset()
-    clientForm.value!.resetValidation()
+    if (clientForm.value) {
+      clientForm.value.reset()
+      clientForm.value.resetValidation()
+    }
   } catch (e) {
     if (e instanceof AxiosError) {
       $q.notify({
@@ -645,6 +664,7 @@ const getClient = async () => {
     client.value.legalRepresentativeRFC || ''
   createClient.value.legalRepresentativeCURP =
     client.value.legalRepresentativeCURP || ''
+  createClient.value.observations = client.value.observations
 
   if (client.value.regimes) {
     regimesClient.value = client.value.regimes?.map((i) => `${i.id}`)
@@ -664,8 +684,12 @@ getClient()
 watch(
   () => regimesClient.value,
   (to) => {
+    const regimesNumber = to
+      .filter((i): i is string => i !== null)
+      .map((i) => +i)
+
     regimesOptionsMapped.value.forEach((item) => {
-      if (to.map((i) => +i!).includes(+item.value)) item.disable = true
+      if (regimesNumber.includes(+item.value)) item.disable = true
       else delete item.disable
     })
   },

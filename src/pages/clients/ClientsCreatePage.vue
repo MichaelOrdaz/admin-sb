@@ -395,6 +395,19 @@
                 </div>
               </div>
 
+              <div class="row">
+                <div class="col">
+                  <q-input
+                    class="q-mt-md"
+                    v-model="createClient.observations"
+                    filled
+                    type="textarea"
+                    label="Observaciones al cliente"
+                    color="white"
+                  />
+                </div>
+              </div>
+
               <div class="row q-my-sm">
                 <div class="col-12">
                   <q-btn
@@ -465,6 +478,7 @@ const createClient = ref<Partial<CreateClientDto>>({
   legalRepresentativeFullname: '',
   legalRepresentativeRFC: '',
   legalRepresentativeCURP: '',
+  observations: '',
 })
 
 const activityItemBase: { activity: null | string; percentage: null | number } =
@@ -517,6 +531,7 @@ const resetForm = () => {
   createClient.value.legalRepresentativeFullname = ''
   createClient.value.legalRepresentativeRFC = ''
   createClient.value.legalRepresentativeCURP = ''
+  createClient.value.observations = ''
 
   regimesClient.value = [null]
   activitiesClient.value = [{ ...activityItemBase }]
@@ -557,7 +572,10 @@ const onSubmit = async () => {
     legalRepresentativeRFC: createClient.value.legalRepresentativeRFC as string,
     legalRepresentativeCURP: createClient.value
       .legalRepresentativeCURP as string,
-    regimes: regimesClient.value.map((i) => +i!),
+    observations: createClient.value.observations,
+    regimes: regimesClient.value
+      .filter((regimeId): regimeId is number => regimeId !== null)
+      .map((regimeId) => +regimeId),
     activities: activitiesClient.value.map((i) => ({
       name: i.activity!,
       percentage: +i.percentage!,
@@ -571,9 +589,7 @@ const onSubmit = async () => {
       }
     })
 
-    const response = await new ClientesApi(
-      configToken
-    ).clientsControllerCreateClient({
+    await new ClientesApi(configToken).clientsControllerCreateClient({
       ...createClientRequest,
     })
     $q.notify({
@@ -582,8 +598,10 @@ const onSubmit = async () => {
     })
 
     resetForm()
-    clientForm.value!.reset()
-    clientForm.value!.resetValidation()
+    if (clientForm.value) {
+      clientForm.value.reset()
+      clientForm.value.resetValidation()
+    }
   } catch (e) {
     console.log('error', e)
     if (e instanceof AxiosError) {
@@ -605,8 +623,11 @@ const onSubmit = async () => {
 watch(
   () => regimesClient.value,
   (to) => {
+    const regimesNumber = to
+      .filter((item): item is number => item !== null)
+      .map((i) => +i)
     regimesOptionsMapped.value.forEach((item) => {
-      if (to.map((i) => +i!).includes(+item.value)) item.disable = true
+      if (regimesNumber.includes(+item.value)) item.disable = true
       else delete item.disable
     })
   },

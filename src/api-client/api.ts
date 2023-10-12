@@ -236,6 +236,18 @@ export interface Client {
   legalRepresentativeCURP?: string
   /**
    *
+   * @type {string}
+   * @memberof Client
+   */
+  observations: string
+  /**
+   *
+   * @type {string}
+   * @memberof Client
+   */
+  reasonToInactive: string
+  /**
+   *
    * @type {Array<Activity>}
    * @memberof Client
    */
@@ -443,19 +455,25 @@ export interface CreateClientDto {
    * @type {string}
    * @memberof CreateClientDto
    */
-  legalRepresentativeFullname: string
+  legalRepresentativeFullname?: string
   /**
    *
    * @type {string}
    * @memberof CreateClientDto
    */
-  legalRepresentativeRFC: string
+  legalRepresentativeRFC?: string
   /**
    *
    * @type {string}
    * @memberof CreateClientDto
    */
-  legalRepresentativeCURP: string
+  legalRepresentativeCURP?: string
+  /**
+   *
+   * @type {string}
+   * @memberof CreateClientDto
+   */
+  observations?: string
   /**
    *
    * @type {Array<number>}
@@ -631,6 +649,19 @@ export interface RegimeControllerFindOneRegime200ResponseData {
    * @memberof RegimeControllerFindOneRegime200ResponseData
    */
   regime?: Regime
+}
+/**
+ *
+ * @export
+ * @interface SoftDeleteClientDto
+ */
+export interface SoftDeleteClientDto {
+  /**
+   *
+   * @type {string}
+   * @memberof SoftDeleteClientDto
+   */
+  reason: string
 }
 /**
  *
@@ -1443,14 +1474,16 @@ export const ClientesApiAxiosParamCreator = function (
       }
     },
     /**
-     * obtener todos los datos del un cliente en particular
+     * obtener todos los datos del un cliente en particular, agrego una bandera query para obtener un cliente sofdelete
      * @summary
      * @param {number} clientId
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     clientsControllerFindOneClient: async (
       clientId: number,
+      inactive?: 0 | 1,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'clientId' is not null or undefined
@@ -1477,6 +1510,10 @@ export const ClientesApiAxiosParamCreator = function (
       // authentication bearer required
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      if (inactive !== undefined) {
+        localVarQueryParameter['inactive'] = inactive
+      }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
@@ -1600,11 +1637,13 @@ export const ClientesApiAxiosParamCreator = function (
      * Elimina un cliente por id, se conservan sus datos (borrado logico)
      * @summary
      * @param {number} clientId
+     * @param {SoftDeleteClientDto} softDeleteClientDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     clientsControllerSoftRemoveClient: async (
       clientId: number,
+      softDeleteClientDto: SoftDeleteClientDto,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'clientId' is not null or undefined
@@ -1612,6 +1651,12 @@ export const ClientesApiAxiosParamCreator = function (
         'clientsControllerSoftRemoveClient',
         'clientId',
         clientId
+      )
+      // verify required parameter 'softDeleteClientDto' is not null or undefined
+      assertParamExists(
+        'clientsControllerSoftRemoveClient',
+        'softDeleteClientDto',
+        softDeleteClientDto
       )
       const localVarPath = `/clients/{clientId}`.replace(
         `{${'clientId'}}`,
@@ -1636,6 +1681,8 @@ export const ClientesApiAxiosParamCreator = function (
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+      localVarHeaderParameter['Content-Type'] = 'application/json'
+
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
         baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -1644,6 +1691,11 @@ export const ClientesApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       }
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        softDeleteClientDto,
+        localVarRequestOptions,
+        configuration
+      )
 
       return {
         url: toPathString(localVarUrlObj),
@@ -1782,14 +1834,16 @@ export const ClientesApiFp = function (configuration?: Configuration) {
       )
     },
     /**
-     * obtener todos los datos del un cliente en particular
+     * obtener todos los datos del un cliente en particular, agrego una bandera query para obtener un cliente sofdelete
      * @summary
      * @param {number} clientId
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async clientsControllerFindOneClient(
       clientId: number,
+      inactive?: 0 | 1,
       options?: AxiosRequestConfig
     ): Promise<
       (
@@ -1800,6 +1854,7 @@ export const ClientesApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.clientsControllerFindOneClient(
           clientId,
+          inactive,
           options
         )
       return createRequestFunction(
@@ -1869,11 +1924,13 @@ export const ClientesApiFp = function (configuration?: Configuration) {
      * Elimina un cliente por id, se conservan sus datos (borrado logico)
      * @summary
      * @param {number} clientId
+     * @param {SoftDeleteClientDto} softDeleteClientDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async clientsControllerSoftRemoveClient(
       clientId: number,
+      softDeleteClientDto: SoftDeleteClientDto,
       options?: AxiosRequestConfig
     ): Promise<
       (
@@ -1884,6 +1941,7 @@ export const ClientesApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.clientsControllerSoftRemoveClient(
           clientId,
+          softDeleteClientDto,
           options
         )
       return createRequestFunction(
@@ -1969,18 +2027,20 @@ export const ClientesApiFactory = function (
         .then((request) => request(axios, basePath))
     },
     /**
-     * obtener todos los datos del un cliente en particular
+     * obtener todos los datos del un cliente en particular, agrego una bandera query para obtener un cliente sofdelete
      * @summary
      * @param {number} clientId
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     clientsControllerFindOneClient(
       clientId: number,
+      inactive?: 0 | 1,
       options?: any
     ): AxiosPromise<ClientsControllerCreateClient201Response> {
       return localVarFp
-        .clientsControllerFindOneClient(clientId, options)
+        .clientsControllerFindOneClient(clientId, inactive, options)
         .then((request) => request(axios, basePath))
     },
     /**
@@ -2017,15 +2077,21 @@ export const ClientesApiFactory = function (
      * Elimina un cliente por id, se conservan sus datos (borrado logico)
      * @summary
      * @param {number} clientId
+     * @param {SoftDeleteClientDto} softDeleteClientDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     clientsControllerSoftRemoveClient(
       clientId: number,
+      softDeleteClientDto: SoftDeleteClientDto,
       options?: any
     ): AxiosPromise<ClientsControllerCreateClient201Response> {
       return localVarFp
-        .clientsControllerSoftRemoveClient(clientId, options)
+        .clientsControllerSoftRemoveClient(
+          clientId,
+          softDeleteClientDto,
+          options
+        )
         .then((request) => request(axios, basePath))
     },
     /**
@@ -2090,19 +2156,21 @@ export class ClientesApi extends BaseAPI {
   }
 
   /**
-   * obtener todos los datos del un cliente en particular
+   * obtener todos los datos del un cliente en particular, agrego una bandera query para obtener un cliente sofdelete
    * @summary
    * @param {number} clientId
+   * @param {0 | 1} [inactive]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ClientesApi
    */
   public clientsControllerFindOneClient(
     clientId: number,
+    inactive?: 0 | 1,
     options?: AxiosRequestConfig
   ) {
     return ClientesApiFp(this.configuration)
-      .clientsControllerFindOneClient(clientId, options)
+      .clientsControllerFindOneClient(clientId, inactive, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
@@ -2144,16 +2212,18 @@ export class ClientesApi extends BaseAPI {
    * Elimina un cliente por id, se conservan sus datos (borrado logico)
    * @summary
    * @param {number} clientId
+   * @param {SoftDeleteClientDto} softDeleteClientDto
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ClientesApi
    */
   public clientsControllerSoftRemoveClient(
     clientId: number,
+    softDeleteClientDto: SoftDeleteClientDto,
     options?: AxiosRequestConfig
   ) {
     return ClientesApiFp(this.configuration)
-      .clientsControllerSoftRemoveClient(clientId, options)
+      .clientsControllerSoftRemoveClient(clientId, softDeleteClientDto, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
@@ -2538,11 +2608,13 @@ export const UsersApiAxiosParamCreator = function (
      * e¿obtener todos los datos de un usuario
      * @summary
      * @param {number} userId
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     usersControllerFindOne: async (
       userId: number,
+      inactive?: 0 | 1,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'userId' is not null or undefined
@@ -2569,6 +2641,10 @@ export const UsersApiAxiosParamCreator = function (
       // authentication bearer required
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      if (inactive !== undefined) {
+        localVarQueryParameter['inactive'] = inactive
+      }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
@@ -2920,11 +2996,13 @@ export const UsersApiFp = function (configuration?: Configuration) {
      * e¿obtener todos los datos de un usuario
      * @summary
      * @param {number} userId
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async usersControllerFindOne(
       userId: number,
+      inactive?: 0 | 1,
       options?: AxiosRequestConfig
     ): Promise<
       (
@@ -2933,7 +3011,11 @@ export const UsersApiFp = function (configuration?: Configuration) {
       ) => AxiosPromise<UsersControllerFindOne200Response>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.usersControllerFindOne(userId, options)
+        await localVarAxiosParamCreator.usersControllerFindOne(
+          userId,
+          inactive,
+          options
+        )
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -3129,15 +3211,17 @@ export const UsersApiFactory = function (
      * e¿obtener todos los datos de un usuario
      * @summary
      * @param {number} userId
+     * @param {0 | 1} [inactive]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     usersControllerFindOne(
       userId: number,
+      inactive?: 0 | 1,
       options?: any
     ): AxiosPromise<UsersControllerFindOne200Response> {
       return localVarFp
-        .usersControllerFindOne(userId, options)
+        .usersControllerFindOne(userId, inactive, options)
         .then((request) => request(axios, basePath))
     },
     /**
@@ -3262,13 +3346,18 @@ export class UsersApi extends BaseAPI {
    * e¿obtener todos los datos de un usuario
    * @summary
    * @param {number} userId
+   * @param {0 | 1} [inactive]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UsersApi
    */
-  public usersControllerFindOne(userId: number, options?: AxiosRequestConfig) {
+  public usersControllerFindOne(
+    userId: number,
+    inactive?: 0 | 1,
+    options?: AxiosRequestConfig
+  ) {
     return UsersApiFp(this.configuration)
-      .usersControllerFindOne(userId, options)
+      .usersControllerFindOne(userId, inactive, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
