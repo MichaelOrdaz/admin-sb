@@ -8,6 +8,7 @@ import {
   Configuration,
 } from 'src/api-client'
 import TextTogglePassword from 'src/components/TextTogglePassword.vue'
+import { ROUTER_NAMES } from 'src/router'
 import { useAuthStore } from 'src/stores/auth-store'
 import { reactive, ref } from 'vue'
 
@@ -76,7 +77,14 @@ getClientCodes()
         Claves Finanzas, Infonavit, Otras
       </div>
       <div class="text-right">
-        <q-btn label="Editar accesos SAT" color="primary"></q-btn>
+        <q-btn
+          label="Editar accesos"
+          color="primary"
+          :to="{
+            name: ROUTER_NAMES.CLIENTS_CODES_EDIT_OTHERS,
+            params: { clientId: client.id },
+          }"
+        ></q-btn>
       </div>
       <div class="row q-mt-sm q-mb-lg">
         <div class="col-12 text-weight-bold">INFONAVIT:</div>

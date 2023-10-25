@@ -16,13 +16,19 @@
           <q-card-section class="q-pt-none">
             <h5 class="q-my-none">
               Editar claves de acceso
-              <span v-if="$route.name === ROUTER_NAMES.CLIENTS_CODES_EDIT_SAT"
-                >SAT</span
-              >
+              <span v-if="$route.name === ROUTER_NAMES.CLIENTS_CODES_EDIT_SAT">
+                SAT
+              </span>
               <span
                 v-else-if="$route.name === ROUTER_NAMES.CLIENTS_CODES_EDIT_IMSS"
-                >IMSS</span
-              >
+                >IMSS
+              </span>
+              <span
+                v-else-if="
+                  $route.name === ROUTER_NAMES.CLIENTS_CODES_EDIT_OTHERS
+                "
+                >Infonavit, ISN y otras
+              </span>
             </h5>
             <template v-if="client">
               <span>
@@ -48,7 +54,15 @@
           :client="client"
         />
         <AccessCodeFormImss
-          v-if="client && $route.name === ROUTER_NAMES.CLIENTS_CODES_EDIT_IMSS"
+          v-else-if="
+            client && $route.name === ROUTER_NAMES.CLIENTS_CODES_EDIT_IMSS
+          "
+          :client="client"
+        />
+        <AccessCodeFormOthers
+          v-else-if="
+            client && $route.name === ROUTER_NAMES.CLIENTS_CODES_EDIT_OTHERS
+          "
           :client="client"
         />
       </div>
@@ -64,6 +78,7 @@ import { Client, ClientesApi, Configuration } from 'src/api-client'
 import { useAuthStore } from 'src/stores/auth-store'
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { ROUTER_NAMES } from 'src/router'
 
 import dayjs from 'dayjs'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
@@ -72,8 +87,8 @@ dayjs.locale('es')
 dayjs.extend(localizedFormat)
 
 import AccessCodeFormSat from './clientsCodesSubViews/AccessCodeFormSat.vue'
-import { ROUTER_NAMES } from 'src/router'
 import AccessCodeFormImss from './clientsCodesSubViews/AccessCodeFormImss.vue'
+import AccessCodeFormOthers from './clientsCodesSubViews/AccessCodeFormOthers.vue'
 
 const route = useRoute()
 const router = useRouter()

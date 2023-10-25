@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { AxiosError } from 'axios'
-import dayjs from 'dayjs'
 import { useQuasar } from 'quasar'
 import {
   Client,
   CodigosDeClienteApi,
   Configuration,
   SaveClientCodesImssDto,
-  SaveClientCodesSatDto,
 } from 'src/api-client'
 import { useAuthStore } from 'src/stores/auth-store'
 import { reactive, ref } from 'vue'
