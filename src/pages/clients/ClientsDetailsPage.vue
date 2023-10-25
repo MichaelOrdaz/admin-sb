@@ -1,7 +1,30 @@
 <template>
   <q-page class="q-pa-md">
-    <div class="row">
-      <div class="col-sm-9">
+    <q-card class="q-mb-md" flat>
+      <q-tabs no-caps align="left" inline-label>
+        <q-route-tab
+          label="Detalle"
+          icon="business"
+          :to="{
+            name: ROUTER_NAMES.CLIENTS_DETAILS,
+            params: { clientId: $route.params.clientId },
+            query: { active: $route.query.active },
+          }"
+        />
+        <q-route-tab
+          v-if="$route.query.active === '1'"
+          label="Claves de acceso"
+          icon="key"
+          :to="{
+            name: ROUTER_NAMES.CLIENTS_CODES_DETAILS,
+            params: { clientId: $route.params.clientId },
+          }"
+        />
+      </q-tabs>
+    </q-card>
+
+    <div class="row q-col-gutter-x-sm">
+      <div class="col">
         <q-card>
           <q-card-actions>
             <q-btn
@@ -190,30 +213,6 @@
           <q-inner-loading :showing="loading">
             <q-spinner-gears size="50px" color="primary" />
           </q-inner-loading>
-        </q-card>
-      </div>
-      <div class="col-sm-3 q-px-lg" v-if="$route.query.active === '1'">
-        <q-card>
-          <q-list bordered separator>
-            <q-item clickable v-ripple>
-              <q-item-section avatar>
-                <q-icon name="architecture" />
-              </q-item-section>
-              <q-item-section>Procesos</q-item-section>
-            </q-item>
-            <q-item clickable v-ripple>
-              <q-item-section avatar>
-                <q-icon name="key" />
-              </q-item-section>
-              <q-item-section>Contraseñas</q-item-section>
-            </q-item>
-            <q-item clickable v-ripple>
-              <q-item-section avatar>
-                <q-icon name="paid" />
-              </q-item-section>
-              <q-item-section>Honorarios</q-item-section>
-            </q-item>
-          </q-list>
         </q-card>
       </div>
     </div>

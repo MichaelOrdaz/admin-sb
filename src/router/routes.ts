@@ -7,6 +7,10 @@ export const ROUTER_NAMES = {
   CLIENTS_NEW: 'clientes_nuevo',
   CLIENTS_DETAILS: 'clientes_detalle',
   CLIENTS_EDIT: 'clientes_edicion',
+  CLIENTS_CODES_DETAILS: 'clientes_detalle_codigos',
+  CLIENTS_CODES_EDIT_SAT: 'clientes_editar_codigos_sat',
+  CLIENTS_CODES_EDIT_IMSS: 'clientes_editar_codigos_imss',
+  CLIENTS_CODES_EDIT_OTHERS: 'clientes_editar_codigos_otra',
 
   USERS_LIST: 'usuarios_listado',
   USERS_REGISTER: 'usuarios_registro',
@@ -55,6 +59,26 @@ const routes: RouteRecordRaw[] = [
         path: 'clientes/:clientId(\\d+)/edicion',
         name: ROUTER_NAMES.CLIENTS_EDIT,
         component: () => import('pages/clients/ClientsEditPage.vue'),
+      },
+      {
+        path: 'clientes/:clientId(\\d+)/accesos',
+        name: ROUTER_NAMES.CLIENTS_CODES_DETAILS,
+        component: () => import('pages/clients/ClientsDetailAccessPage.vue'),
+      },
+      {
+        path: 'clientes/:clientId(\\d+)/accesos/editar-sat',
+        name: ROUTER_NAMES.CLIENTS_CODES_EDIT_SAT,
+        component: () => import('pages/clients/ClientsEditAccessPage.vue'),
+      },
+      {
+        path: 'clientes/:clientId(\\d+)/accesos/editar-imss',
+        name: ROUTER_NAMES.CLIENTS_CODES_EDIT_IMSS,
+        component: () => import('pages/clients/ClientsEditAccessPage.vue'),
+      },
+      {
+        path: 'clientes/:clientId(\\d+)/accesos/editar-otras',
+        name: ROUTER_NAMES.CLIENTS_CODES_EDIT_OTHERS,
+        component: () => import('pages/clients/ClientsEditAccessPage.vue'),
       },
       // usuarios
       {
