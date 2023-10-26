@@ -103,6 +103,11 @@ const routes: RouteRecordRaw[] = [
       },
       // TODO; crear mas rutas
       {
+        path: 'claves',
+        name: ROUTER_NAMES.PASSWORDS,
+        component: () => import('pages/accessCodes/AccessCodesListPage.vue'),
+      },
+      {
         path: 'tiempos',
         name: ROUTER_NAMES.TIMES,
         component: () => import('pages/TimesPage.vue'),
@@ -111,11 +116,6 @@ const routes: RouteRecordRaw[] = [
         path: 'honorarios',
         name: ROUTER_NAMES.PAYMENT_OF_FEES,
         component: () => import('pages/FeesPage.vue'),
-      },
-      {
-        path: 'claves',
-        name: ROUTER_NAMES.PASSWORDS,
-        component: () => import('pages/PasswordsPage.vue'),
       },
       {
         path: 'configuraciones',

@@ -2,7 +2,7 @@
   <q-page class="q-pa-md">
     <div class="row">
       <div class="col-xs-12">
-        <q-card>
+        <q-card flat>
           <q-card-actions>
             <q-btn
               color="white"
