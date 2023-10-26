@@ -25,7 +25,7 @@
 
     <div class="row q-col-gutter-x-sm">
       <div class="col">
-        <q-card>
+        <q-card flat>
           <q-card-actions>
             <q-btn
               @click="$router.back()"

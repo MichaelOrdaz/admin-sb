@@ -86,7 +86,7 @@
               <q-input
                 filled
                 debounce="300"
-                color="primary"
+                color="white"
                 label="buscar"
                 v-model="filter"
               >

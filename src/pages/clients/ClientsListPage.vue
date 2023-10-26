@@ -2,7 +2,7 @@
   <q-page class="q-pa-md">
     <div class="row">
       <div class="col-xs-12">
-        <q-card>
+        <q-card flat>
           <q-card-section class="text-right">
             <q-btn color="primary" :to="{ name: ROUTER_NAMES.CLIENTS_NEW }">
               Agregar cliente
@@ -24,6 +24,7 @@
             :pagination="{
               rowsPerPage: 10,
             }"
+            class="table-clients"
           >
             <template v-slot:body-cell-actions="props">
               <q-td :props="props">
@@ -48,6 +49,16 @@
                       params: { clientId: props.row.id },
                     }"
                     title="editar cliente"
+                  />
+                  <q-btn
+                    flat
+                    round
+                    icon="key"
+                    :to="{
+                      name: ROUTER_NAMES.CLIENTS_CODES_DETAILS,
+                      params: { clientId: props.row.id },
+                    }"
+                    title="Ver claves de acceso"
                   />
                   <q-btn
                     flat
@@ -83,7 +94,7 @@
               <q-input
                 filled
                 debounce="300"
-                color="primary"
+                color="white"
                 label="buscar"
                 v-model="filter"
               >
@@ -369,3 +380,15 @@ const showDialogActionRestore = (row: Client) => {
   messageDialog.labelBtnConfirm = 'Restaurar'
 }
 </script>
+<style lang="sass">
+.table-clients
+  td:last-child
+    background-color: $sb-primary
+  thead tr:last-child th:last-child
+    background-color: $sb-primary
+  th:last-child,
+  td:last-child
+    position: sticky
+    right: 0
+    z-index: 1
+</style>
