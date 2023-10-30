@@ -200,22 +200,28 @@ const onSubmit = async () => {
   if (clientCodes.efirma.code) {
     requestCodes.efirma = {
       code: clientCodes.efirma.code,
-      expeditionDate: clientCodes.efirma.expeditionDate,
-      dueDate: clientCodes.efirma.dueDate,
+      expeditionDate: dayjs(clientCodes.efirma.expeditionDate)
+        .toDate()
+        .toISOString(),
+      dueDate: dayjs(clientCodes.efirma.dueDate).toDate().toISOString(),
     }
   }
   if (clientCodes.efirmaRep.code) {
     requestCodes.efirmaRep = {
       code: clientCodes.efirmaRep.code,
-      expeditionDate: clientCodes.efirmaRep.expeditionDate,
-      dueDate: clientCodes.efirmaRep.dueDate,
+      expeditionDate: dayjs(clientCodes.efirmaRep.expeditionDate)
+        .toDate()
+        .toISOString(),
+      dueDate: dayjs(clientCodes.efirmaRep.dueDate).toDate().toISOString(),
     }
   }
   if (clientCodes.csd.code) {
     requestCodes.csd = {
       code: clientCodes.csd.code,
-      expeditionDate: clientCodes.csd.expeditionDate,
-      dueDate: clientCodes.csd.dueDate,
+      expeditionDate: dayjs(clientCodes.csd.expeditionDate)
+        .toDate()
+        .toISOString(),
+      dueDate: dayjs(clientCodes.csd.dueDate).toDate().toISOString(),
     }
   }
   if (clientCodes.ciec.code) {

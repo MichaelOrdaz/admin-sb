@@ -16,6 +16,7 @@
             :pagination="{
               rowsPerPage: 10,
             }"
+            :visible-columns="visibleColumns"
           >
             <template v-slot:body-cell-code="props">
               <q-td :props="props">
@@ -28,12 +29,8 @@
                   flat
                   round
                   icon="edit"
-                  :to="{
-                    name: ROUTER_NAMES.USERS_DETAILS,
-                    params: { userId: props.row.id },
-                  }"
                   title="editar"
-                  disable
+                  @click="() => handleSelectItem(props.row)"
                 />
               </q-td>
             </template>
@@ -73,26 +70,117 @@
     </div>
 
     <q-dialog v-model="confirm" persistent>
-      <q-card>
-        <q-card-section class="items-start" v-if="selected">
-          <q-avatar
-            :icon="messageDialog.icon"
-            :color="messageDialog.colorIcon"
-            text-color="white"
-          />
-          <div class="q-ml-sm" v-if="selected">
-            {{ messageDialog.message }}
+      <q-card v-if="selected">
+        <q-card-section>
+          <div class="text-h6">
+            Editar accesos del cliente
+            {{
+              `${selected.client?.name} ${selected.client?.paternalSurname} ${selected.client?.maternalSurname}`
+            }}
           </div>
+        </q-card-section>
+        <q-card-section>
+          <q-form @submit="onSubmit" id="editaccesscode">
+            <div class="row q-col-gutter-md">
+              <div
+                class="col-12"
+                v-show="
+                  [
+                    'CIEC',
+                    'CERTIFICADO IMSS',
+                    'ESCRITORIO VIRTUAL IMSS',
+                    'SIPARE',
+                    'INFONAVIT',
+                    'ISN',
+                  ].includes(`${selected.name}`)
+                "
+              >
+                <q-input
+                  filled
+                  label="Nombre de usuario"
+                  v-model="editAccessCode.username"
+                  color="white"
+                >
+                </q-input>
+              </div>
+              <div
+                class="col-12"
+                v-show="['INFONAVIT'].includes(`${selected.name}`)"
+              >
+                <q-input
+                  filled
+                  label="correo electrónico"
+                  v-model="editAccessCode.email"
+                  color="white"
+                >
+                </q-input>
+              </div>
+              <div class="col-12">
+                <q-input
+                  filled
+                  label="contraseña"
+                  v-model="editAccessCode.code"
+                  :type="editAccessCode.isPwd ? 'password' : 'text'"
+                  color="white"
+                >
+                  <template v-slot:append>
+                    <q-icon
+                      :name="
+                        editAccessCode.isPwd ? 'visibility_off' : 'visibility'
+                      "
+                      class="cursor-pointer"
+                      @click="editAccessCode.isPwd = !editAccessCode.isPwd"
+                    />
+                  </template>
+                </q-input>
+              </div>
+
+              <div
+                class="col-12"
+                v-show="
+                  ['E.FIRMA', 'E.FIRMA REP LEGAL', 'CSD'].includes(
+                    `${selected.name}`
+                  )
+                "
+              >
+                <q-input
+                  filled
+                  label="Fecha de emisión"
+                  v-model="editAccessCode.expeditionDate"
+                  color="white"
+                  type="date"
+                >
+                </q-input>
+              </div>
+              <div
+                class="col-12"
+                v-show="
+                  ['E.FIRMA', 'E.FIRMA REP LEGAL', 'CSD'].includes(
+                    `${selected.name}`
+                  )
+                "
+              >
+                <q-input
+                  filled
+                  label="Fecha de expiración"
+                  v-model="editAccessCode.dueDate"
+                  color="white"
+                  type="date"
+                >
+                </q-input>
+              </div>
+            </div>
+          </q-form>
         </q-card-section>
 
         <q-card-actions align="right">
           <q-btn
-            flat
-            :label="messageDialog.labelBtnConfirm"
-            :color="messageDialog.colorIcon"
-            v-close-popup
+            label="Guardar cambios"
+            color="primary"
+            type="submit"
+            form="editaccesscode"
           />
-          <q-btn flat label="cancelar" color="primary" v-close-popup />
+          <q-btn label="cancelar" color="grey" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -101,11 +189,15 @@
 
 <script setup lang="ts">
 import { QTableProps, useMeta, useQuasar } from 'quasar'
-import { reactive, ref, watchEffect } from 'vue'
+import { computed, reactive, ref, watchEffect } from 'vue'
 import { AxiosError } from 'axios'
 import { useAuthStore } from 'src/stores/auth-store'
-import { AccessCode, AccessCodesApi, Configuration } from 'src/api-client'
-import { ROUTER_NAMES } from 'src/router'
+import {
+  AccessCode,
+  AccessCodesApi,
+  CodigosDeClienteApi,
+  Configuration,
+} from 'src/api-client'
 import TextTogglePassword from 'src/components/TextTogglePassword.vue'
 
 import dayjs from 'dayjs'
@@ -127,12 +219,30 @@ const selected = ref<AccessCode | null>(null)
 
 const codeNamesOptions = ref<{ label: string; value: string }[]>([])
 
-const messageDialog = reactive({
-  action: '',
-  message: '',
-  icon: '',
-  colorIcon: '',
-  labelBtnConfirm: '',
+const visibleColumns = computed(() => {
+  const visibles = ['name', 'rfc', 'code', 'actions']
+  if (
+    [
+      'CIEC',
+      'CERTIFICADO IMSS',
+      'ESCRITORIO VIRTUAL IMSS',
+      'SIPARE',
+      'INFONAVIT',
+      'ISN',
+    ].includes(`${accessCodeType.value}`)
+  ) {
+    visibles.push('username')
+  } else if (
+    ['E.FIRMA', 'E.FIRMA REP LEGAL', 'CSD'].includes(`${accessCodeType.value}`)
+  ) {
+    visibles.push('expeditionDate', 'dueDate')
+  }
+
+  if (['INFONAVIT'].includes(`${accessCodeType.value}`)) {
+    visibles.push('email')
+  }
+
+  return visibles
 })
 
 const loading = ref(false)
@@ -271,13 +381,116 @@ const columns: QTableProps['columns'] = [
   { name: 'actions', label: 'acciones', field: 'acciones' },
 ]
 
-const showDialogActionInactive = (row: AccessCode) => {
+const initialFormAccessCode = {
+  username: '',
+  code: '',
+  email: '',
+  expeditionDate: '',
+  dueDate: '',
+  isPwd: true,
+}
+const editAccessCode = reactive({ ...initialFormAccessCode })
+
+const handleSelectItem = (row: AccessCode) => {
   confirm.value = true
   selected.value = row
-  messageDialog.action = 'inactive'
-  messageDialog.message = '¿Deseas desactivar al usuario'
-  messageDialog.icon = 'remove_circle'
-  messageDialog.colorIcon = 'warning'
-  messageDialog.labelBtnConfirm = 'Desactivar'
+
+  editAccessCode.code = row.code
+  editAccessCode.username = row.username ? row.username : ''
+  editAccessCode.email = row.email ? row.email : ''
+  editAccessCode.expeditionDate = row.expeditionDate
+    ? dayjs(row.expeditionDate).format('YYYY-MM-DD')
+    : ''
+  editAccessCode.dueDate = row.dueDate
+    ? dayjs(row.dueDate).format('YYYY-MM-DD')
+    : ''
+}
+
+const onSubmit = async () => {
+  if (!selected.value) return
+
+  if (
+    [
+      'CIEC',
+      'CERTIFICADO IMSS',
+      'ESCRITORIO VIRTUAL IMSS',
+      'SIPARE',
+      'ISN',
+    ].includes(`${selected.value?.name}`)
+  ) {
+    if (!editAccessCode.code || !editAccessCode.username) {
+      $q.notify({
+        color: 'negative',
+        message:
+          'Todos los campos son requeridos (contraseña y nombre de usuario)',
+      })
+      return
+    }
+  } else if (
+    ['E.FIRMA', 'E.FIRMA REP LEGAL', 'CSD'].includes(`${selected.value?.name}`)
+  ) {
+    if (
+      !editAccessCode.code ||
+      !editAccessCode.expeditionDate ||
+      !editAccessCode.dueDate
+    ) {
+      $q.notify({
+        color: 'negative',
+        message:
+          'Todos los campos son requeridos (contraseña, fecha de emisión y fecha de expiración)',
+      })
+      return
+    }
+  } else if (['INFONAVIT'].includes(`${selected.value?.name}`)) {
+    if (
+      !editAccessCode.code ||
+      !editAccessCode.username ||
+      !editAccessCode.email
+    ) {
+      $q.notify({
+        color: 'negative',
+        message:
+          'Todos los campos son requeridos (contraseña, nombre de usuario y correo electrónico)',
+      })
+      return
+    }
+  }
+
+  try {
+    const response = await new AccessCodesApi(
+      configToken
+    ).accessCodesControllerUpdateCode(selected.value?.id as number, {
+      code: editAccessCode.code,
+      user: editAccessCode.username || null,
+      email: editAccessCode.email || null,
+      expeditionDate: editAccessCode.expeditionDate
+        ? dayjs(editAccessCode.expeditionDate).toDate().toISOString()
+        : null,
+      dueDate: editAccessCode.dueDate
+        ? dayjs(editAccessCode.dueDate).toDate().toISOString()
+        : null,
+    })
+
+    $q.notify({
+      color: 'positive',
+      message: 'Los cambios se guardaron correctamente',
+    })
+    getAccessCodes()
+    confirm.value = false
+  } catch (e) {
+    loading.value = false
+    if (e instanceof AxiosError) {
+      $q.notify({
+        color: 'negative',
+        message: e.response?.data.message,
+      })
+    } else if (e instanceof Error) {
+      $q.notify({
+        color: 'negative',
+        message:
+          'Upps, hubo un problema al realizar la acción, por favor reintenta',
+      })
+    }
+  }
 }
 </script>
