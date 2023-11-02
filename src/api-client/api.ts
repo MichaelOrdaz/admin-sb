@@ -875,6 +875,55 @@ export interface ClientCodesControllerSaveCodesSat200ResponseDataClientCodes {
 /**
  * 
  * @export
+ * @interface ClientDeadlineDto
+ */
+export interface ClientDeadlineDto {
+    /**
+     * 
+     * @type {number}
+     * @memberof ClientDeadlineDto
+     */
+    'id': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ClientDeadlineDto
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ClientDeadlineDto
+     */
+    'rfc': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ClientDeadlineDto
+     */
+    'typePerson': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ClientDeadlineDto
+     */
+    'digit6': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ClientDeadlineDto
+     */
+    'aditionalDayClient': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ClientDeadlineDto
+     */
+    'deadline': string;
+}
+/**
+ * 
+ * @export
  * @interface ClientsControllerCreateClient201Response
  */
 export interface ClientsControllerCreateClient201Response {
@@ -897,6 +946,38 @@ export interface ClientsControllerCreateClient201ResponseData {
      * @memberof ClientsControllerCreateClient201ResponseData
      */
     'client'?: Client;
+}
+/**
+ * 
+ * @export
+ * @interface ClientsControllerDueDateClients200Response
+ */
+export interface ClientsControllerDueDateClients200Response {
+    /**
+     * 
+     * @type {ClientsControllerDueDateClients200ResponseData}
+     * @memberof ClientsControllerDueDateClients200Response
+     */
+    'data'?: ClientsControllerDueDateClients200ResponseData;
+}
+/**
+ * 
+ * @export
+ * @interface ClientsControllerDueDateClients200ResponseData
+ */
+export interface ClientsControllerDueDateClients200ResponseData {
+    /**
+     * 
+     * @type {Array<ClientDeadlineDto>}
+     * @memberof ClientsControllerDueDateClients200ResponseData
+     */
+    'clients'?: Array<ClientDeadlineDto>;
+    /**
+     * 
+     * @type {string}
+     * @memberof ClientsControllerDueDateClients200ResponseData
+     */
+    'deadline'?: string;
 }
 /**
  * 
@@ -1324,7 +1405,7 @@ export interface SaveClientCodesSatDto {
      * @type {SaveClientCodesSatDtoEfirma}
      * @memberof SaveClientCodesSatDto
      */
-    'digitalCertificate'?: SaveClientCodesSatDtoEfirma | null;
+    'csd'?: SaveClientCodesSatDtoEfirma | null;
     /**
      * 
      * @type {SaveClientCodesSatDtoCiec}
@@ -2387,6 +2468,40 @@ export const ClientesApiAxiosParamCreator = function (configuration?: Configurat
             };
         },
         /**
+         * listado de clientes con fechas de impuestos aproximadas
+         * @summary 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        clientsControllerDueDateClients: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/clients/due-date`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Obtiene una lista de clientes registrados en el sistema, con informacion basica
          * @summary 
          * @param {0 | 1} [inactive] 
@@ -2654,6 +2769,16 @@ export const ClientesApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * listado de clientes con fechas de impuestos aproximadas
+         * @summary 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async clientsControllerDueDateClients(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ClientsControllerDueDateClients200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.clientsControllerDueDateClients(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Obtiene una lista de clientes registrados en el sistema, con informacion basica
          * @summary 
          * @param {0 | 1} [inactive] 
@@ -2743,6 +2868,15 @@ export const ClientesApiFactory = function (configuration?: Configuration, baseP
             return localVarFp.clientsControllerCreateClient(createClientDto, options).then((request) => request(axios, basePath));
         },
         /**
+         * listado de clientes con fechas de impuestos aproximadas
+         * @summary 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        clientsControllerDueDateClients(options?: any): AxiosPromise<ClientsControllerDueDateClients200Response> {
+            return localVarFp.clientsControllerDueDateClients(options).then((request) => request(axios, basePath));
+        },
+        /**
          * Obtiene una lista de clientes registrados en el sistema, con informacion basica
          * @summary 
          * @param {0 | 1} [inactive] 
@@ -2825,6 +2959,17 @@ export class ClientesApi extends BaseAPI {
      */
     public clientsControllerCreateClient(createClientDto: CreateClientDto, options?: AxiosRequestConfig) {
         return ClientesApiFp(this.configuration).clientsControllerCreateClient(createClientDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * listado de clientes con fechas de impuestos aproximadas
+     * @summary 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ClientesApi
+     */
+    public clientsControllerDueDateClients(options?: AxiosRequestConfig) {
+        return ClientesApiFp(this.configuration).clientsControllerDueDateClients(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
