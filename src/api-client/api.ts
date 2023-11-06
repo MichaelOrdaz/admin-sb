@@ -978,6 +978,12 @@ export interface ClientsControllerDueDateClients200ResponseData {
      * @memberof ClientsControllerDueDateClients200ResponseData
      */
     'deadline'?: string;
+    /**
+     * 
+     * @type {Array<Holyday>}
+     * @memberof ClientsControllerDueDateClients200ResponseData
+     */
+    'holydays'?: Array<Holyday>;
 }
 /**
  * 
@@ -1141,6 +1147,25 @@ export interface CreateClientDto {
 /**
  * 
  * @export
+ * @interface CreateHolydayDto
+ */
+export interface CreateHolydayDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateHolydayDto
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateHolydayDto
+     */
+    'date': string;
+}
+/**
+ * 
+ * @export
  * @interface CreateUserDto
  */
 export interface CreateUserDto {
@@ -1180,6 +1205,95 @@ export interface CreateUserDto {
      * @memberof CreateUserDto
      */
     'role': string;
+}
+/**
+ * 
+ * @export
+ * @interface Holyday
+ */
+export interface Holyday {
+    /**
+     * 
+     * @type {number}
+     * @memberof Holyday
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Holyday
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Holyday
+     */
+    'date': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Holyday
+     */
+    'createdAt': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Holyday
+     */
+    'updatedAt': string;
+}
+/**
+ * 
+ * @export
+ * @interface HolydaysControllerCreateHolyday200Response
+ */
+export interface HolydaysControllerCreateHolyday200Response {
+    /**
+     * 
+     * @type {HolydaysControllerCreateHolyday200ResponseData}
+     * @memberof HolydaysControllerCreateHolyday200Response
+     */
+    'data'?: HolydaysControllerCreateHolyday200ResponseData;
+}
+/**
+ * 
+ * @export
+ * @interface HolydaysControllerCreateHolyday200ResponseData
+ */
+export interface HolydaysControllerCreateHolyday200ResponseData {
+    /**
+     * 
+     * @type {Holyday}
+     * @memberof HolydaysControllerCreateHolyday200ResponseData
+     */
+    'day'?: Holyday;
+}
+/**
+ * 
+ * @export
+ * @interface HolydaysControllerFindAllHolydays200Response
+ */
+export interface HolydaysControllerFindAllHolydays200Response {
+    /**
+     * 
+     * @type {HolydaysControllerFindAllHolydays200ResponseData}
+     * @memberof HolydaysControllerFindAllHolydays200Response
+     */
+    'data'?: HolydaysControllerFindAllHolydays200ResponseData;
+}
+/**
+ * 
+ * @export
+ * @interface HolydaysControllerFindAllHolydays200ResponseData
+ */
+export interface HolydaysControllerFindAllHolydays200ResponseData {
+    /**
+     * 
+     * @type {Array<Holyday>}
+     * @memberof HolydaysControllerFindAllHolydays200ResponseData
+     */
+    'days'?: Array<Holyday>;
 }
 /**
  * 
@@ -3386,6 +3500,450 @@ export class CodigosDeClienteApi extends BaseAPI {
      */
     public clientCodesControllerSaveCodesSat(clientId: number, saveClientCodesSatDto: SaveClientCodesSatDto, options?: AxiosRequestConfig) {
         return CodigosDeClienteApiFp(this.configuration).clientCodesControllerSaveCodesSat(clientId, saveClientCodesSatDto, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * HolydaysApi - axios parameter creator
+ * @export
+ */
+export const HolydaysApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {CreateHolydayDto} createHolydayDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        holydaysControllerCreateHolyday: async (createHolydayDto: CreateHolydayDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createHolydayDto' is not null or undefined
+            assertParamExists('holydaysControllerCreateHolyday', 'createHolydayDto', createHolydayDto)
+            const localVarPath = `/holydays`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createHolydayDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        holydaysControllerFindAllHolydays: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/holydays`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} year 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        holydaysControllerFindAllHolydaysByYear: async (year: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'year' is not null or undefined
+            assertParamExists('holydaysControllerFindAllHolydaysByYear', 'year', year)
+            const localVarPath = `/holydays/year/{year}`
+                .replace(`{${"year"}}`, encodeURIComponent(String(year)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} dayId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        holydaysControllerFindOneHolyday: async (dayId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'dayId' is not null or undefined
+            assertParamExists('holydaysControllerFindOneHolyday', 'dayId', dayId)
+            const localVarPath = `/holydays/{dayId}`
+                .replace(`{${"dayId"}}`, encodeURIComponent(String(dayId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} dayId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        holydaysControllerRemove: async (dayId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'dayId' is not null or undefined
+            assertParamExists('holydaysControllerRemove', 'dayId', dayId)
+            const localVarPath = `/holydays/{dayId}`
+                .replace(`{${"dayId"}}`, encodeURIComponent(String(dayId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} dayId 
+         * @param {CreateHolydayDto} createHolydayDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        holydaysControllerUpdate: async (dayId: number, createHolydayDto: CreateHolydayDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'dayId' is not null or undefined
+            assertParamExists('holydaysControllerUpdate', 'dayId', dayId)
+            // verify required parameter 'createHolydayDto' is not null or undefined
+            assertParamExists('holydaysControllerUpdate', 'createHolydayDto', createHolydayDto)
+            const localVarPath = `/holydays/{dayId}`
+                .replace(`{${"dayId"}}`, encodeURIComponent(String(dayId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createHolydayDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * HolydaysApi - functional programming interface
+ * @export
+ */
+export const HolydaysApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = HolydaysApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {CreateHolydayDto} createHolydayDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async holydaysControllerCreateHolyday(createHolydayDto: CreateHolydayDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HolydaysControllerCreateHolyday200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.holydaysControllerCreateHolyday(createHolydayDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async holydaysControllerFindAllHolydays(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HolydaysControllerFindAllHolydays200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.holydaysControllerFindAllHolydays(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} year 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async holydaysControllerFindAllHolydaysByYear(year: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HolydaysControllerFindAllHolydays200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.holydaysControllerFindAllHolydaysByYear(year, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} dayId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async holydaysControllerFindOneHolyday(dayId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HolydaysControllerCreateHolyday200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.holydaysControllerFindOneHolyday(dayId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} dayId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async holydaysControllerRemove(dayId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HolydaysControllerCreateHolyday200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.holydaysControllerRemove(dayId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} dayId 
+         * @param {CreateHolydayDto} createHolydayDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async holydaysControllerUpdate(dayId: number, createHolydayDto: CreateHolydayDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HolydaysControllerCreateHolyday200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.holydaysControllerUpdate(dayId, createHolydayDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * HolydaysApi - factory interface
+ * @export
+ */
+export const HolydaysApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = HolydaysApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {CreateHolydayDto} createHolydayDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        holydaysControllerCreateHolyday(createHolydayDto: CreateHolydayDto, options?: any): AxiosPromise<HolydaysControllerCreateHolyday200Response> {
+            return localVarFp.holydaysControllerCreateHolyday(createHolydayDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        holydaysControllerFindAllHolydays(options?: any): AxiosPromise<HolydaysControllerFindAllHolydays200Response> {
+            return localVarFp.holydaysControllerFindAllHolydays(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} year 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        holydaysControllerFindAllHolydaysByYear(year: number, options?: any): AxiosPromise<HolydaysControllerFindAllHolydays200Response> {
+            return localVarFp.holydaysControllerFindAllHolydaysByYear(year, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} dayId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        holydaysControllerFindOneHolyday(dayId: number, options?: any): AxiosPromise<HolydaysControllerCreateHolyday200Response> {
+            return localVarFp.holydaysControllerFindOneHolyday(dayId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} dayId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        holydaysControllerRemove(dayId: number, options?: any): AxiosPromise<HolydaysControllerCreateHolyday200Response> {
+            return localVarFp.holydaysControllerRemove(dayId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} dayId 
+         * @param {CreateHolydayDto} createHolydayDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        holydaysControllerUpdate(dayId: number, createHolydayDto: CreateHolydayDto, options?: any): AxiosPromise<HolydaysControllerCreateHolyday200Response> {
+            return localVarFp.holydaysControllerUpdate(dayId, createHolydayDto, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * HolydaysApi - object-oriented interface
+ * @export
+ * @class HolydaysApi
+ * @extends {BaseAPI}
+ */
+export class HolydaysApi extends BaseAPI {
+    /**
+     * 
+     * @param {CreateHolydayDto} createHolydayDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HolydaysApi
+     */
+    public holydaysControllerCreateHolyday(createHolydayDto: CreateHolydayDto, options?: AxiosRequestConfig) {
+        return HolydaysApiFp(this.configuration).holydaysControllerCreateHolyday(createHolydayDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HolydaysApi
+     */
+    public holydaysControllerFindAllHolydays(options?: AxiosRequestConfig) {
+        return HolydaysApiFp(this.configuration).holydaysControllerFindAllHolydays(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} year 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HolydaysApi
+     */
+    public holydaysControllerFindAllHolydaysByYear(year: number, options?: AxiosRequestConfig) {
+        return HolydaysApiFp(this.configuration).holydaysControllerFindAllHolydaysByYear(year, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} dayId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HolydaysApi
+     */
+    public holydaysControllerFindOneHolyday(dayId: number, options?: AxiosRequestConfig) {
+        return HolydaysApiFp(this.configuration).holydaysControllerFindOneHolyday(dayId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} dayId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HolydaysApi
+     */
+    public holydaysControllerRemove(dayId: number, options?: AxiosRequestConfig) {
+        return HolydaysApiFp(this.configuration).holydaysControllerRemove(dayId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} dayId 
+     * @param {CreateHolydayDto} createHolydayDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HolydaysApi
+     */
+    public holydaysControllerUpdate(dayId: number, createHolydayDto: CreateHolydayDto, options?: AxiosRequestConfig) {
+        return HolydaysApiFp(this.configuration).holydaysControllerUpdate(dayId, createHolydayDto, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

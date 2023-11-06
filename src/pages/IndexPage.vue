@@ -4,7 +4,12 @@ import dayjs from 'dayjs'
 import LocalizedFormat from 'dayjs/plugin/localizedFormat'
 import 'dayjs/locale/es'
 import { useAuthStore } from 'src/stores/auth-store'
-import { ClientDeadlineDto, ClientesApi, Configuration } from 'src/api-client'
+import {
+  ClientDeadlineDto,
+  ClientesApi,
+  Configuration,
+  Holyday,
+} from 'src/api-client'
 import { ref } from 'vue'
 import { AxiosError } from 'axios'
 import { ROUTER_NAMES } from 'src/router'
@@ -86,6 +91,8 @@ const columns: QTableProps['columns'] = [
 const clientsDeadlines = ref<ClientDeadlineDto[]>([])
 const loading = ref(false)
 
+const holydays = ref<Holyday[]>([])
+
 const getClients = async () => {
   loading.value = true
   try {
@@ -104,6 +111,8 @@ const getClients = async () => {
         }
       )
       clientsDeadlines.value = result as ClientDeadlineDto[]
+
+      holydays.value = response.data.data.holydays as Holyday[]
     }
     loading.value = false
   } catch (e) {
@@ -133,6 +142,22 @@ getClients()
         <q-card flat>
           <q-card-section>
             <div class="text-h6">Fecha limite de pago de impuestos</div>
+          </q-card-section>
+
+          <q-card-section>
+            Este mes de {{ dayjs().format('MMMM') }}
+            <template v-if="holydays.length === 0">
+              no hay días festivos
+            </template>
+            <template v-else>
+              hay {{ holydays.length }} días feriados
+              <br />
+              <ul>
+                <li v-for="holyday in holydays" :key="holyday.id">
+                  {{ holyday.name }} - {{ holyday.date }}
+                </li>
+              </ul>
+            </template>
           </q-card-section>
 
           <q-table
