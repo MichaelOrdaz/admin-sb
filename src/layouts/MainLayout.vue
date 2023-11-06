@@ -78,6 +78,24 @@
               <q-item-section> {{ item.title }} </q-item-section>
             </q-item>
           </template>
+          <q-expansion-item
+            expand-separator
+            icon="settings"
+            label="Configuraciones"
+          >
+            <q-item
+              :to="{ name: ROUTER_NAMES.SETTINGS_HOLYDAYS }"
+              active-class="active-page"
+              clickable
+              v-ripple
+              exact
+            >
+              <q-item-section avatar>
+                <q-icon name="event" />
+              </q-item-section>
+              <q-item-section> Días inhábiles </q-item-section>
+            </q-item>
+          </q-expansion-item>
         </q-list>
       </q-scroll-area>
     </q-drawer>
@@ -90,7 +108,6 @@
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar'
-// import { AuthApi, Configuration } from 'src/api-client'
 import { ROUTER_NAMES } from 'src/router'
 import { useAuthStore } from 'src/stores/auth-store'
 import { computed, ref } from 'vue'
@@ -141,11 +158,6 @@ const sistemLinks = [
     icon: 'people',
     to: { name: ROUTER_NAMES.USERS_LIST } as RouteLocationRaw,
   },
-  {
-    title: 'Configuraciones',
-    icon: 'settings',
-    to: { name: ROUTER_NAMES.SETTINGS } as RouteLocationRaw,
-  },
 ]
 
 const mainLinksByRole = computed(() => {
@@ -161,14 +173,6 @@ const leftDrawerOpen = ref(false)
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
-
-// const getProfile = async () => {
-//   await new AuthApi(
-//     new Configuration({ accessToken: authStore.token })
-//   ).authControllerGetProfile()
-// }
-
-// getProfile()
 </script>
 
 <style lang="sass" scoped>

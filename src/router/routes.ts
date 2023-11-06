@@ -17,10 +17,11 @@ export const ROUTER_NAMES = {
   USERS_DETAILS: 'usuarios_detalles',
   USERS_EDIT: 'usuarios_edicion',
 
-  TIMES: 'tiempos',
   PASSWORDS: 'claves',
-  USERS: 'usuarios',
-  SETTINGS: 'configuraciones',
+
+  SETTINGS_HOLYDAYS: 'dias_inhabiles',
+
+  TIMES: 'tiempos',
   PAYMENT_OF_FEES: 'honorarios',
 }
 
@@ -118,9 +119,9 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/FeesPage.vue'),
       },
       {
-        path: 'configuraciones',
-        name: ROUTER_NAMES.SETTINGS,
-        component: () => import('pages/ConfigPage.vue'),
+        path: 'configuraciones/dias-inhabiles',
+        name: ROUTER_NAMES.SETTINGS_HOLYDAYS,
+        component: () => import('pages/settings/HolydaysPage.vue'),
       },
     ],
   },
