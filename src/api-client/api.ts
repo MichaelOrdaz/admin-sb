@@ -732,12 +732,6 @@ export interface ClientCodesControllerSaveCodesImss200ResponseDataClientCodes {
      * @type {AccessCode}
      * @memberof ClientCodesControllerSaveCodesImss200ResponseDataClientCodes
      */
-    'imssCertificate'?: AccessCode;
-    /**
-     * 
-     * @type {AccessCode}
-     * @memberof ClientCodesControllerSaveCodesImss200ResponseDataClientCodes
-     */
     'idse'?: AccessCode;
     /**
      * 
@@ -1426,12 +1420,6 @@ export interface SaveClientCodesImssDto {
      * @type {SaveClientCodesSatDtoCiec}
      * @memberof SaveClientCodesImssDto
      */
-    'imssCertificate'?: SaveClientCodesSatDtoCiec | null;
-    /**
-     * 
-     * @type {SaveClientCodesSatDtoCiec}
-     * @memberof SaveClientCodesImssDto
-     */
     'idse'?: SaveClientCodesSatDtoCiec | null;
     /**
      * 
@@ -1790,11 +1778,11 @@ export const AccessCodesApiAxiosParamCreator = function (configuration?: Configu
          * 
          * @param {number} [clientId] 
          * @param {'SAT' | 'IMSS' | 'OTRA'} [category] 
-         * @param {'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'CERTIFICADO IMSS' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN'} [name] 
+         * @param {'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN'} [name] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        accessCodesControllerFindAllCodes: async (clientId?: number, category?: 'SAT' | 'IMSS' | 'OTRA', name?: 'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'CERTIFICADO IMSS' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN', options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        accessCodesControllerFindAllCodes: async (clientId?: number, category?: 'SAT' | 'IMSS' | 'OTRA', name?: 'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN', options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/access-codes`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1998,11 +1986,11 @@ export const AccessCodesApiFp = function(configuration?: Configuration) {
          * 
          * @param {number} [clientId] 
          * @param {'SAT' | 'IMSS' | 'OTRA'} [category] 
-         * @param {'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'CERTIFICADO IMSS' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN'} [name] 
+         * @param {'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN'} [name] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async accessCodesControllerFindAllCodes(clientId?: number, category?: 'SAT' | 'IMSS' | 'OTRA', name?: 'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'CERTIFICADO IMSS' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN', options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessCodesControllerFindAllCodes200Response>> {
+        async accessCodesControllerFindAllCodes(clientId?: number, category?: 'SAT' | 'IMSS' | 'OTRA', name?: 'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN', options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessCodesControllerFindAllCodes200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.accessCodesControllerFindAllCodes(clientId, category, name, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2060,11 +2048,11 @@ export const AccessCodesApiFactory = function (configuration?: Configuration, ba
          * 
          * @param {number} [clientId] 
          * @param {'SAT' | 'IMSS' | 'OTRA'} [category] 
-         * @param {'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'CERTIFICADO IMSS' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN'} [name] 
+         * @param {'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN'} [name] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        accessCodesControllerFindAllCodes(clientId?: number, category?: 'SAT' | 'IMSS' | 'OTRA', name?: 'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'CERTIFICADO IMSS' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN', options?: any): AxiosPromise<AccessCodesControllerFindAllCodes200Response> {
+        accessCodesControllerFindAllCodes(clientId?: number, category?: 'SAT' | 'IMSS' | 'OTRA', name?: 'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN', options?: any): AxiosPromise<AccessCodesControllerFindAllCodes200Response> {
             return localVarFp.accessCodesControllerFindAllCodes(clientId, category, name, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2117,12 +2105,12 @@ export class AccessCodesApi extends BaseAPI {
      * 
      * @param {number} [clientId] 
      * @param {'SAT' | 'IMSS' | 'OTRA'} [category] 
-     * @param {'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'CERTIFICADO IMSS' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN'} [name] 
+     * @param {'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN'} [name] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AccessCodesApi
      */
-    public accessCodesControllerFindAllCodes(clientId?: number, category?: 'SAT' | 'IMSS' | 'OTRA', name?: 'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'CERTIFICADO IMSS' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN', options?: AxiosRequestConfig) {
+    public accessCodesControllerFindAllCodes(clientId?: number, category?: 'SAT' | 'IMSS' | 'OTRA', name?: 'CIEC' | 'E.FIRMA' | 'E.FIRMA REP LEGAL' | 'CSD' | 'IDSE' | 'ESCRITORIO VIRTUAL IMSS' | 'SIPARE' | 'INFONAVIT' | 'ISN', options?: AxiosRequestConfig) {
         return AccessCodesApiFp(this.configuration).accessCodesControllerFindAllCodes(clientId, category, name, options).then((request) => request(this.axios, this.basePath));
     }
 

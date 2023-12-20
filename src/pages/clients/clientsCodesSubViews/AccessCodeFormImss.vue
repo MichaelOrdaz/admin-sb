@@ -154,17 +154,9 @@ const onSubmit = async () => {
   }
 
   const requestCodes: SaveClientCodesImssDto = {
-    imssCertificate: null,
     idse: null,
     virtualDesktop: null,
     sipare: null,
-  }
-
-  if (clientCodes.imssCertificate.code) {
-    requestCodes.imssCertificate = {
-      code: clientCodes.imssCertificate.code,
-      user: clientCodes.imssCertificate.username,
-    }
   }
 
   if (clientCodes.idse.code) {
@@ -221,58 +213,6 @@ const onSubmit = async () => {
   <q-card flat>
     <q-card-section>
       <q-form @submit="onSubmit">
-        <div class="row q-col-gutter-sm">
-          <div class="col-12 text-weight-bold">
-            <div class="row">
-              <div class="col">Certificado IMSS:</div>
-              <div class="col-auto">
-                <q-icon
-                  name="delete"
-                  size="sm"
-                  class="cursor-pointer"
-                  @click="
-                    clientCodes.imssCertificate = { ...baseClientCodeEdit }
-                  "
-                ></q-icon>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-sm-6 col-md-4">
-            <q-input
-              filled
-              label="Nombre de usuario"
-              v-model="clientCodes.imssCertificate.username"
-              color="white"
-            >
-            </q-input>
-          </div>
-          <div class="col-12 col-sm-6 col-md-4">
-            <q-input
-              filled
-              label="contraseña"
-              v-model="clientCodes.imssCertificate.code"
-              :type="clientCodes.imssCertificate.isPwd ? 'password' : 'text'"
-              color="white"
-            >
-              <template v-slot:append>
-                <q-icon
-                  :name="
-                    clientCodes.imssCertificate.isPwd
-                      ? 'visibility_off'
-                      : 'visibility'
-                  "
-                  class="cursor-pointer"
-                  @click="
-                    clientCodes.imssCertificate.isPwd =
-                      !clientCodes.imssCertificate.isPwd
-                  "
-                />
-              </template>
-            </q-input>
-          </div>
-        </div>
-
         <div class="row q-col-gutter-sm q-my-md">
           <div class="col-12 text-weight-bold">
             <div class="row">
