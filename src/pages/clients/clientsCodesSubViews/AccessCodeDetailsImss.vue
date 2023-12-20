@@ -22,7 +22,6 @@ interface Props {
 }
 
 interface ClientCodesSat {
-  imssCertificate: AccessCode | null
   idse: AccessCode | null
   virtualDesktop: AccessCode | null
   sipare: AccessCode | null
@@ -32,7 +31,6 @@ const props = defineProps<Props>()
 const loading = ref(false)
 
 const clientCodes = reactive<ClientCodesSat>({
-  imssCertificate: null,
   idse: null,
   virtualDesktop: null,
   sipare: null,
@@ -49,8 +47,7 @@ const getClientCodes = async () => {
 
     const codes = response.data.data?.clientCodes
     if (codes) {
-      const { imssCertificate, idse, virtualDesktop, sipare } = codes
-      if (imssCertificate) clientCodes.imssCertificate = imssCertificate
+      const { idse, virtualDesktop, sipare } = codes
       if (idse) clientCodes.idse = idse
       if (virtualDesktop) clientCodes.virtualDesktop = virtualDesktop
       if (sipare) clientCodes.sipare = sipare
@@ -115,21 +112,6 @@ getClientCodes()
           <div class="col-12 col-sm-6 col-md-4">
             Contraseña:
             <text-toggle-password :text="`${clientCodes.idse?.code}`" />
-          </div>
-        </template>
-        <div v-else class="col-12 col-sm-6 col-md-4">Sin especificar</div>
-      </div>
-      <div class="row q-mt-sm q-mb-lg">
-        <div class="col-12 text-weight-bold">Certificado IMSS:</div>
-        <template v-if="clientCodes.imssCertificate">
-          <div class="col-12 col-sm-6 col-md-4">
-            Usuario: {{ clientCodes.imssCertificate?.username }}
-          </div>
-          <div class="col-12 col-sm-6 col-md-4">
-            Contraseña:
-            <text-toggle-password
-              :text="`${clientCodes.imssCertificate?.code}`"
-            />
           </div>
         </template>
         <div v-else class="col-12 col-sm-6 col-md-4">Sin especificar</div>

@@ -84,6 +84,7 @@ const columns: QTableProps['columns'] = [
     label: 'faltan',
     field: 'diff',
     format: (val) => (val ? `${val}d` : '-'),
+    sortable: true,
   },
   { name: 'actions', label: 'acciones', field: 'acciones' },
 ]
@@ -133,12 +134,14 @@ const getClients = async () => {
 }
 
 getClients()
+
+const filter = ref('')
 </script>
 
 <template>
   <q-page class="q-pa-md">
     <div class="row">
-      <div class="col-md-8 col-xs-12">
+      <div class="col-md-9 col-xs-12">
         <q-card flat>
           <q-card-section>
             <div class="text-h6">Fecha limite de pago de impuestos</div>
@@ -174,7 +177,22 @@ getClients()
             style="max-height: 600px"
             virtual-scroll
             :rows-per-page-options="[0]"
+            :filter="filter"
           >
+            <template v-slot:top>
+              <q-space />
+              <q-input
+                filled
+                debounce="300"
+                color="white"
+                label="buscar"
+                v-model="filter"
+              >
+                <template v-slot:append>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
+            </template>
             <template v-slot:body-cell-actions="props">
               <q-td :props="props">
                 <q-btn
