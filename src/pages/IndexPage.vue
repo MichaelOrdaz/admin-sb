@@ -13,7 +13,8 @@ import {
 import { ref } from 'vue'
 import { AxiosError } from 'axios'
 import { ROUTER_NAMES } from 'src/router'
-import { today, QCalendarMonth } from '@quasar/quasar-ui-qcalendar'
+import CalendarAgendaSubview from './agenda/CalendarAgendaSubview.vue'
+
 dayjs.extend(LocalizedFormat)
 dayjs.locale('es')
 
@@ -134,41 +135,11 @@ const getClients = async () => {
 }
 
 getClients()
-
-const selectedDate = today()
-const calendarRef = ref<QCalendarMonth | null>(null)
-
-const onToday = () => {
-  if (calendarRef.value) calendarRef.value.moveToToday()
-}
-const onPrev = () => {
-  console.log(calendarRef)
-  if (calendarRef.value) calendarRef.value.prev()
-}
-const onNext = () => {
-  if (calendarRef.value) calendarRef.value.next()
-}
 </script>
 
 <template>
   <q-page class="q-pa-md">
-    <div>
-      {{ selectedDate }}
-    </div>
-    <div class="row justify-center">
-      <q-btn label="hoy" color="primary" @click="onToday"></q-btn>
-      <q-btn label="anterior" color="primary" @click="onPrev"></q-btn>
-      <q-btn label="siguiente" color="primary" @click="onNext"></q-btn>
-    </div>
-    <div class="row q-mb-md">
-      <div class="col">
-        <q-calendar-month
-          v-model="selectedDate"
-          bordered
-          ref="calendarRef"
-        ></q-calendar-month>
-      </div>
-    </div>
+    <CalendarAgendaSubview />
     <div class="row">
       <div class="col-md-8 col-xs-12">
         <q-card flat>
