@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { today, parseDate } from '@quasar/quasar-ui-qcalendar'
+import { today } from '@quasar/quasar-ui-qcalendar'
 import type { QCalendarMonth, Timestamp } from '@quasar/quasar-ui-qcalendar'
-import { computed, reactive, ref } from 'vue'
-import { QForm, colors, date as qdate } from 'quasar'
+import { computed, reactive, ref, watchEffect } from 'vue'
+import { QForm, colors, date as qdate, useQuasar } from 'quasar'
+import dayjs from 'dayjs'
+import { AgendaApi, Configuration } from 'src/api-client'
+import { useAuthStore } from 'src/stores/auth-store'
+import { AxiosError } from 'axios'
 
 export type QCalendarPayload = {
   event: Event
@@ -25,7 +29,18 @@ type EventCalendar = {
   bgcolor: string
 }
 
+type ChangePayload = {
+  days: Timestamp[]
+  start: string
+  end: string
+}
+
+const $q = useQuasar()
+const authStore = useAuthStore()
+const configToken = new Configuration({ accessToken: authStore.token })
+
 const selectedDate = ref(today())
+
 const calendarRef = ref<QCalendarMonth | null>(null)
 
 function onToday() {
@@ -39,9 +54,9 @@ function onNext() {
 }
 
 const dateTitle = computed(() => {
-  const offset = `${new Date().getTimezoneOffset() / 60}`.padStart(2, '0')
+  // envuelvo la fecha entre un dayjs, para poder convertirla a hora local, ya que no posee hora
   return qdate.formatDate(
-    `${selectedDate.value}T00:00:00-${offset}:00`,
+    dayjs(selectedDate.value).toDate(),
     'dddd D [de] MMMM, YYYY'
   )
 })
@@ -72,6 +87,7 @@ function addEventMenu(data: QCalendarPayload) {
 }
 
 function resetForm() {
+  event.value = null
   eventForm.title = ''
   eventForm.details = ''
 }
@@ -84,79 +100,49 @@ async function onSubmit() {
   if (validate) {
     // close the dialog
     addEvent.value = false
+    displayEvent.value = false
     const form = { ...eventForm }
     let update = false
     if (eventForm.id) {
       update = true
     }
     const data = {
-      id: new Date().getTime(),
       title: form.title,
-      details: form.details,
-      bgcolor: form.bgcolor,
+      description: form.details,
       date: form.dateTimeStart,
+      color: form.bgcolor,
     }
     if (update) {
-      const index = events.value.findIndex((e) => e.id === form.id)
-      if (index !== -1) {
-        events.value.splice(index, 1, { ...data })
+      const response = await new AgendaApi(configToken).agendaControllerUpdate(
+        eventForm.id as number,
+        data
+      )
+      if (response.data.data && response.data.data.agenda) {
+        $q.notify({
+          color: 'positive',
+          message: 'Evento actualizado correctamente',
+        })
       }
     } else {
-      events.value.push(data)
+      const response = await new AgendaApi(configToken).agendaControllerCreate(
+        data
+      )
+      if (response.data.data && response.data.data.agenda) {
+        $q.notify({
+          color: 'positive',
+          message: 'Evento guardado correctamente',
+        })
+      }
     }
-    // self.contextDay = null
+    getEvents()
   }
-}
-function onReset() {
-  // nothing
 }
 
 const addOrUpdateEvent = computed(() => {
-  if (event.value) {
-    return 'Actualizar'
-  }
-  return 'Añadir'
+  return eventForm.id ? 'Actualizar' : 'Añadir'
 })
 
-const CURRENT_DAY = new Date()
-function getCurrentDay(day: number) {
-  const newDay = new Date(CURRENT_DAY)
-  newDay.setDate(day)
-  const tm = parseDate(newDay) as Timestamp
-  return tm.date
-}
-
-const events = ref<EventCalendar[]>([
-  {
-    id: 1,
-    title: '1st of the Month',
-    details: 'Everything is funny as long as it is happening to someone else',
-    date: getCurrentDay(1),
-    bgcolor: 'orange',
-  },
-  {
-    id: 2,
-    title: 'Sisters Birthday',
-    details: 'Buy a nice present',
-    date: getCurrentDay(4),
-    bgcolor: 'green',
-  },
-  {
-    id: 3,
-    title: 'Meeting',
-    details: 'Time to pitch my idea to the company',
-    date: getCurrentDay(10),
-    bgcolor: 'red',
-  },
-  {
-    id: 4,
-    title: 'Lorem',
-    details: 'Time to pitch my idea to the company',
-    date: getCurrentDay(10),
-    bgcolor: '#FFF',
-  },
-])
-
+const events = ref<EventCalendar[]>([])
 const eventsMap = computed(() => {
   const map = {} as { [key: string]: EventCalendar[] }
   events.value.forEach((event) =>
@@ -164,15 +150,54 @@ const eventsMap = computed(() => {
   )
   return map
 })
+async function getEvents() {
+  try {
+    const response = await new AgendaApi(configToken).agendaControllerFindAll(
+      startCalendar.value,
+      endCalendar.value
+    )
+    if (response.data.data && response.data.data.agendas) {
+      response.data.data.agendas
+      events.value = response.data.data.agendas.map((event) => {
+        return {
+          id: event.id as number,
+          title: event.title as string,
+          details: event.description as string,
+          date: event.date as string,
+          bgcolor: event.color as string,
+        }
+      })
+    }
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      $q.notify({
+        color: 'negative',
+        message: e.response?.data.message,
+      })
+    } else if (e instanceof Error) {
+      $q.notify({
+        color: 'negative',
+        message:
+          'Upps, hubo un problema al realizar la acción, por favor reintenta',
+      })
+    }
+  }
+}
+
+const startCalendar = ref('')
+const endCalendar = ref('')
+watchEffect(() => {
+  if (startCalendar.value && endCalendar.value) {
+    getEvents()
+  }
+})
 
 const event = ref<EventCalendar | null>(null)
 const displayEvent = ref(false)
 function showEvent(eventShow: EventCalendar) {
   displayEvent.value = true
-  console.log(eventShow)
   if (eventShow) {
     event.value = eventShow
-    console.log('se asigno ', eventForm, event.value)
   }
 }
 
@@ -192,11 +217,22 @@ function editEvent(event: EventCalendar) {
   eventForm.id = event.id
   addEvent.value = true // show dialog
 }
-function deleteEvent(event: EventCalendar) {
-  const index = events.value.findIndex((e) => e.id === event.id)
-  if (index >= 0) {
-    events.value.splice(index, 1)
+async function deleteEvent(event: EventCalendar) {
+  const response = await new AgendaApi(configToken).agendaControllerRemove(
+    event.id as number
+  )
+  if (response.data.data && response.data.data.agenda) {
+    $q.notify({
+      color: 'positive',
+      message: 'Evento eliminado correctamente',
+    })
+    getEvents()
   }
+}
+
+function onChange({ start, end }: ChangePayload) {
+  startCalendar.value = start
+  endCalendar.value = end
 }
 </script>
 <template>
@@ -229,6 +265,7 @@ function deleteEvent(event: EventCalendar) {
         :day-height="0"
         locale="es"
         @click-day="addEventMenu"
+        @change="onChange"
       >
         <template #day="{ scope: { timestamp } }">
           <template v-for="event in eventsMap[timestamp.date]" :key="event.id">
@@ -251,7 +288,7 @@ function deleteEvent(event: EventCalendar) {
   <!-- add/edit an event -->
   <q-dialog v-model="addEvent" no-backdrop-dismiss>
     <div>
-      <q-form ref="eventQForm" @submit="onSubmit" @reset="onReset">
+      <q-form ref="eventQForm" @submit="onSubmit">
         <q-card v-if="addEvent" style="width: 400px">
           <q-toolbar class="bg-primary text-white">
             <q-toolbar-title> {{ addOrUpdateEvent }} Evento </q-toolbar-title>
