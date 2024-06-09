@@ -243,6 +243,107 @@ export interface Activity {
 /**
  * 
  * @export
+ * @interface Agenda
+ */
+export interface Agenda {
+    /**
+     * 
+     * @type {number}
+     * @memberof Agenda
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Agenda
+     */
+    'title': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Agenda
+     */
+    'description': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Agenda
+     */
+    'date': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Agenda
+     */
+    'color': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Agenda
+     */
+    'createdAt': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Agenda
+     */
+    'updatedAt': string;
+}
+/**
+ * 
+ * @export
+ * @interface AgendaControllerCreate200Response
+ */
+export interface AgendaControllerCreate200Response {
+    /**
+     * 
+     * @type {AgendaControllerCreate200ResponseData}
+     * @memberof AgendaControllerCreate200Response
+     */
+    'data'?: AgendaControllerCreate200ResponseData;
+}
+/**
+ * 
+ * @export
+ * @interface AgendaControllerCreate200ResponseData
+ */
+export interface AgendaControllerCreate200ResponseData {
+    /**
+     * 
+     * @type {Agenda}
+     * @memberof AgendaControllerCreate200ResponseData
+     */
+    'agenda'?: Agenda;
+}
+/**
+ * 
+ * @export
+ * @interface AgendaControllerFindAll200Response
+ */
+export interface AgendaControllerFindAll200Response {
+    /**
+     * 
+     * @type {AgendaControllerFindAll200ResponseData}
+     * @memberof AgendaControllerFindAll200Response
+     */
+    'data'?: AgendaControllerFindAll200ResponseData;
+}
+/**
+ * 
+ * @export
+ * @interface AgendaControllerFindAll200ResponseData
+ */
+export interface AgendaControllerFindAll200ResponseData {
+    /**
+     * 
+     * @type {Array<Agenda>}
+     * @memberof AgendaControllerFindAll200ResponseData
+     */
+    'agendas'?: Array<Agenda>;
+}
+/**
+ * 
+ * @export
  * @interface AuthControllerLogin200Response
  */
 export interface AuthControllerLogin200Response {
@@ -1008,6 +1109,37 @@ export interface ClientsControllerFindClients200ResponseData {
 /**
  * 
  * @export
+ * @interface CreateAgendaDto
+ */
+export interface CreateAgendaDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateAgendaDto
+     */
+    'title': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateAgendaDto
+     */
+    'description': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateAgendaDto
+     */
+    'date': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateAgendaDto
+     */
+    'color': string;
+}
+/**
+ * 
+ * @export
  * @interface CreateClientDto
  */
 export interface CreateClientDto {
@@ -1571,6 +1703,37 @@ export interface SoftDeleteClientDto {
      * @memberof SoftDeleteClientDto
      */
     'reason': string;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateAgendaDto
+ */
+export interface UpdateAgendaDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateAgendaDto
+     */
+    'title'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateAgendaDto
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateAgendaDto
+     */
+    'date'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateAgendaDto
+     */
+    'color'?: string;
 }
 /**
  * 
@@ -2156,6 +2319,403 @@ export class AccessCodesApi extends BaseAPI {
      */
     public accessCodesControllerUpdateCode(codeId: number, accessCodeUpdateDto: AccessCodeUpdateDto, options?: AxiosRequestConfig) {
         return AccessCodesApiFp(this.configuration).accessCodesControllerUpdateCode(codeId, accessCodeUpdateDto, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * AgendaApi - axios parameter creator
+ * @export
+ */
+export const AgendaApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {CreateAgendaDto} createAgendaDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        agendaControllerCreate: async (createAgendaDto: CreateAgendaDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createAgendaDto' is not null or undefined
+            assertParamExists('agendaControllerCreate', 'createAgendaDto', createAgendaDto)
+            const localVarPath = `/agenda`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createAgendaDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} dateStart 
+         * @param {string} dateEnd 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        agendaControllerFindAll: async (dateStart: string, dateEnd: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'dateStart' is not null or undefined
+            assertParamExists('agendaControllerFindAll', 'dateStart', dateStart)
+            // verify required parameter 'dateEnd' is not null or undefined
+            assertParamExists('agendaControllerFindAll', 'dateEnd', dateEnd)
+            const localVarPath = `/agenda`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (dateStart !== undefined) {
+                localVarQueryParameter['dateStart'] = dateStart;
+            }
+
+            if (dateEnd !== undefined) {
+                localVarQueryParameter['dateEnd'] = dateEnd;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} agendaId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        agendaControllerFindOne: async (agendaId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'agendaId' is not null or undefined
+            assertParamExists('agendaControllerFindOne', 'agendaId', agendaId)
+            const localVarPath = `/agenda/{agendaId}`
+                .replace(`{${"agendaId"}}`, encodeURIComponent(String(agendaId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} agendaId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        agendaControllerRemove: async (agendaId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'agendaId' is not null or undefined
+            assertParamExists('agendaControllerRemove', 'agendaId', agendaId)
+            const localVarPath = `/agenda/{agendaId}`
+                .replace(`{${"agendaId"}}`, encodeURIComponent(String(agendaId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} agendaId 
+         * @param {UpdateAgendaDto} updateAgendaDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        agendaControllerUpdate: async (agendaId: number, updateAgendaDto: UpdateAgendaDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'agendaId' is not null or undefined
+            assertParamExists('agendaControllerUpdate', 'agendaId', agendaId)
+            // verify required parameter 'updateAgendaDto' is not null or undefined
+            assertParamExists('agendaControllerUpdate', 'updateAgendaDto', updateAgendaDto)
+            const localVarPath = `/agenda/{agendaId}`
+                .replace(`{${"agendaId"}}`, encodeURIComponent(String(agendaId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateAgendaDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * AgendaApi - functional programming interface
+ * @export
+ */
+export const AgendaApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AgendaApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {CreateAgendaDto} createAgendaDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async agendaControllerCreate(createAgendaDto: CreateAgendaDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AgendaControllerCreate200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.agendaControllerCreate(createAgendaDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} dateStart 
+         * @param {string} dateEnd 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async agendaControllerFindAll(dateStart: string, dateEnd: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AgendaControllerFindAll200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.agendaControllerFindAll(dateStart, dateEnd, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} agendaId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async agendaControllerFindOne(agendaId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AgendaControllerCreate200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.agendaControllerFindOne(agendaId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} agendaId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async agendaControllerRemove(agendaId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AgendaControllerCreate200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.agendaControllerRemove(agendaId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} agendaId 
+         * @param {UpdateAgendaDto} updateAgendaDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async agendaControllerUpdate(agendaId: number, updateAgendaDto: UpdateAgendaDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AgendaControllerCreate200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.agendaControllerUpdate(agendaId, updateAgendaDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * AgendaApi - factory interface
+ * @export
+ */
+export const AgendaApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AgendaApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {CreateAgendaDto} createAgendaDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        agendaControllerCreate(createAgendaDto: CreateAgendaDto, options?: any): AxiosPromise<AgendaControllerCreate200Response> {
+            return localVarFp.agendaControllerCreate(createAgendaDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} dateStart 
+         * @param {string} dateEnd 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        agendaControllerFindAll(dateStart: string, dateEnd: string, options?: any): AxiosPromise<AgendaControllerFindAll200Response> {
+            return localVarFp.agendaControllerFindAll(dateStart, dateEnd, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} agendaId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        agendaControllerFindOne(agendaId: number, options?: any): AxiosPromise<AgendaControllerCreate200Response> {
+            return localVarFp.agendaControllerFindOne(agendaId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} agendaId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        agendaControllerRemove(agendaId: number, options?: any): AxiosPromise<AgendaControllerCreate200Response> {
+            return localVarFp.agendaControllerRemove(agendaId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} agendaId 
+         * @param {UpdateAgendaDto} updateAgendaDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        agendaControllerUpdate(agendaId: number, updateAgendaDto: UpdateAgendaDto, options?: any): AxiosPromise<AgendaControllerCreate200Response> {
+            return localVarFp.agendaControllerUpdate(agendaId, updateAgendaDto, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * AgendaApi - object-oriented interface
+ * @export
+ * @class AgendaApi
+ * @extends {BaseAPI}
+ */
+export class AgendaApi extends BaseAPI {
+    /**
+     * 
+     * @param {CreateAgendaDto} createAgendaDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AgendaApi
+     */
+    public agendaControllerCreate(createAgendaDto: CreateAgendaDto, options?: AxiosRequestConfig) {
+        return AgendaApiFp(this.configuration).agendaControllerCreate(createAgendaDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} dateStart 
+     * @param {string} dateEnd 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AgendaApi
+     */
+    public agendaControllerFindAll(dateStart: string, dateEnd: string, options?: AxiosRequestConfig) {
+        return AgendaApiFp(this.configuration).agendaControllerFindAll(dateStart, dateEnd, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} agendaId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AgendaApi
+     */
+    public agendaControllerFindOne(agendaId: number, options?: AxiosRequestConfig) {
+        return AgendaApiFp(this.configuration).agendaControllerFindOne(agendaId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} agendaId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AgendaApi
+     */
+    public agendaControllerRemove(agendaId: number, options?: AxiosRequestConfig) {
+        return AgendaApiFp(this.configuration).agendaControllerRemove(agendaId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} agendaId 
+     * @param {UpdateAgendaDto} updateAgendaDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AgendaApi
+     */
+    public agendaControllerUpdate(agendaId: number, updateAgendaDto: UpdateAgendaDto, options?: AxiosRequestConfig) {
+        return AgendaApiFp(this.configuration).agendaControllerUpdate(agendaId, updateAgendaDto, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
