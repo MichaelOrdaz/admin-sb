@@ -13,6 +13,8 @@ import {
 import { ref } from 'vue'
 import { AxiosError } from 'axios'
 import { ROUTER_NAMES } from 'src/router'
+import CalendarAgendaSubview from './agenda/CalendarAgendaSubview.vue'
+
 dayjs.extend(LocalizedFormat)
 dayjs.locale('es')
 
@@ -140,6 +142,7 @@ const filter = ref('')
 
 <template>
   <q-page class="q-pa-md">
+    <CalendarAgendaSubview />
     <div class="row">
       <div class="col-md-9 col-xs-12">
         <q-card flat>
